@@ -7,36 +7,6 @@ import Button from '../../../components/ui/Button';
 const Footer = () => {
   const currentYear = new Date()?.getFullYear();
 
-  const footerSections = [
-    {
-      title: 'Expérience',
-      links: [
-        { name: 'Chambres & Suites', path: '/rooms-suites-showcase' },
-        { name: 'Restauration', path: '/culinary-journey' },
-        { name: 'Spa & Bien-être', path: '/experiences-gallery' },
-        { name: 'Expériences Locales', path: '/experiences-gallery' }
-      ]
-    },
-    {
-      title: 'Services',
-      links: [
-        { name: 'Conciergerie', path: '/contact-booking-hub' },
-        { name: 'Centre d’Affaires', path: '/contact-booking-hub' },
-        { name: 'Organisation d’Événements', path: '/contact-booking-hub' },
-        { name: 'Transport', path: '/contact-booking-hub' }
-      ]
-    },
-    {
-      title: 'Politiques',
-      links: [
-        { name: 'Conditions de Réservation', path: '/contact-booking-hub' },
-        { name: 'Politique de Confidentialité', path: '/contact-booking-hub' },
-        { name: 'Annulation', path: '/contact-booking-hub' },
-        { name: 'Accessibilité', path: '/contact-booking-hub' }
-      ]
-    }
-  ];
-
   const socialLinks = [
     { name: 'Instagram', icon: 'Instagram', url: '#' },
     { name: 'Facebook', icon: 'Facebook', url: '#' },
@@ -51,76 +21,12 @@ const Footer = () => {
     hours: "Service Conciergerie 24h/24 et 7j/7"
   };
 
-  const awards = [
-    "Hôtel 5 Étoiles Forbes",
-    "AAA Cinq Diamants",
-    "Conde Nast Gold List",
-    "Travel + Leisure Meilleurs au Monde"
-  ];
+  
 
   return (
     <footer className="bg-primary text-primary-foreground">
       {/* Contenu Principal du Footer */}
       <div className="container mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-          {/* Section Marque */}
-          <div className="lg:col-span-1">
-            <Link to="/homepage" className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
-                <svg 
-                  viewBox="0 0 24 24" 
-                  className="w-7 h-7 text-secondary-foreground"
-                  fill="currentColor"
-                >
-                  <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
-                  <path d="M8 11h8v2H8z" fill="var(--color-primary)"/>
-                  <path d="M10 8h4v2h-4z" fill="var(--color-primary)"/>
-                  <path d="M9 14h6v2H9z" fill="var(--color-primary)"/>
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-xl font-heading font-semibold">Luxe Haven</h3>
-                <p className="text-xs text-primary-foreground/70 tracking-wider uppercase">Hôtel</p>
-              </div>
-            </Link>
-            
-            <p className="text-primary-foreground/80 mb-6 leading-relaxed">
-              Là où le luxe rencontre l’authenticité. Découvrez une hospitalité sur mesure qui transforme votre séjour en une expérience inoubliable.
-            </p>
-
-            {/* Récompenses */}
-            <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-secondary mb-3">Distinctions</h4>
-              {awards?.map((award, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <Icon name="Award" size={14} className="text-secondary flex-shrink-0" />
-                  <span className="text-xs text-primary-foreground/70">{award}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Sections de Navigation */}
-          {footerSections?.map((section, index) => (
-            <div key={index}>
-              <h4 className="text-lg font-heading font-semibold mb-6 text-secondary">
-                {section?.title}
-              </h4>
-              <ul className="space-y-3">
-                {section?.links?.map((link, linkIndex) => (
-                  <li key={linkIndex}>
-                    <Link
-                      to={link?.path}
-                      className="text-primary-foreground/80 hover:text-secondary elegant-transition text-sm"
-                    >
-                      {link?.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
 
         {/* Informations de Contact */}
         <div className="mt-16 pt-12 border-t border-primary-foreground/20">

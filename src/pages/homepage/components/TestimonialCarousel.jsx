@@ -3,21 +3,21 @@ import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 
-const TestimonialCarousel = () => {
+const CarrouselAvis = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  const testimonials = [
+  const avis = [
     {
       id: 1,
       name: "Sarah Mitchell",
       location: "New York, NY",
       avatar: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
       rating: 5,
-      title: "Transformative Experience",
-      content: `Luxe Haven exceeded every expectation. The attention to detail, from the hand-selected linens to the personalized concierge service, created an experience that felt truly bespoke.\n\nThe autumn wine harvest tour was absolutely magical - our sommelier's knowledge and passion made it unforgettable.`,
-      experience: "Heritage Suite • Wine Harvest Experience",
-      date: "October 2024",
+      title: "Expérience Transformatrice",
+      content: `Luxe Haven a dépassé toutes mes attentes. L'attention aux détails, des draps soigneusement sélectionnés au service de conciergerie personnalisé, a créé une expérience véritablement sur mesure.\n\nLa visite des vendanges d'automne était absolument magique - les connaissances et la passion de notre sommelier l'ont rendue inoubliable.`,
+      experience: "Suite Patrimoine • Expérience Vendanges",
+      date: "Octobre 2024",
       verified: true
     },
     {
@@ -26,34 +26,34 @@ const TestimonialCarousel = () => {
       location: "San Francisco, CA",
       avatar: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
       rating: 5,
-      title: "Business Travel Redefined",
-      content: `As someone who travels frequently for business, I can confidently say Luxe Haven sets the gold standard for luxury hospitality.\n\nThe seamless check-in, world-class amenities, and impeccable service made my stay both productive and rejuvenating.`,
-      experience: "Executive Suite • Business Services",
-      date: "November 2024",
+      title: "Voyage d'Affaires Redéfini",
+      content: `En tant que voyageur d'affaires fréquent, je peux affirmer que Luxe Haven établit la référence en matière d'hospitalité de luxe.\n\nL'enregistrement fluide, les équipements de classe mondiale et le service impeccable ont rendu mon séjour à la fois productif et ressourçant.`,
+      experience: "Suite Exécutive • Services Business",
+      date: "Novembre 2024",
       verified: true
     },
     {
       id: 3,
       name: "Emma Thompson",
-      location: "London, UK",
+      location: "Londres, UK",
       avatar: "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
       rating: 5,
-      title: "Anniversary Perfection",
-      content: `Our 10th anniversary celebration at Luxe Haven was nothing short of magical. Every detail was thoughtfully orchestrated to create moments of genuine delight.\n\nThe spa sanctuary retreat was the perfect way to reconnect and celebrate our milestone.`,
-      experience: "Romantic Suite • Spa Sanctuary",
-      date: "September 2024",
+      title: "Anniversaire Parfait",
+      content: `Notre 10ème anniversaire à Luxe Haven a été tout simplement magique. Chaque détail a été soigneusement orchestré pour créer des moments de véritable bonheur.\n\nLa retraite spa était le moyen parfait pour se reconnecter et célébrer notre jalon.`,
+      experience: "Suite Romantique • Spa & Bien-être",
+      date: "Septembre 2024",
       verified: true
     },
     {
       id: 4,
       name: "James Chen",
-      location: "Singapore",
+      location: "Singapour",
       avatar: "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
       rating: 5,
-      title: "Cultural Immersion",
-      content: `The cultural heritage tour opened my eyes to the rich history and architectural significance of the region. Our guide's expertise and exclusive access to historical sites made this trip truly educational and inspiring.\n\nLuxe Haven doesn't just provide accommodation - they curate experiences.`,
-      experience: "Garden Suite • Cultural Heritage Tour",
-      date: "August 2024",
+      title: "Immersion Culturelle",
+      content: `La visite du patrimoine culturel m'a ouvert les yeux sur l'histoire riche et l'importance architecturale de la région. L'expertise de notre guide et l'accès exclusif aux sites historiques ont rendu ce voyage vraiment éducatif et inspirant.\n\nLuxe Haven ne se contente pas de fournir un hébergement – ils créent des expériences.`,
+      experience: "Suite Jardin • Tour du Patrimoine Culturel",
+      date: "Août 2024",
       verified: true
     }
   ];
@@ -62,11 +62,11 @@ const TestimonialCarousel = () => {
     if (!isAutoPlaying) return;
 
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % testimonials?.length);
+      setCurrentIndex((prev) => (prev + 1) % avis?.length);
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying, testimonials?.length]);
+  }, [isAutoPlaying, avis?.length]);
 
   const goToSlide = (index) => {
     setCurrentIndex(index);
@@ -75,46 +75,46 @@ const TestimonialCarousel = () => {
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials?.length);
+    setCurrentIndex((prev) => (prev + 1) % avis?.length);
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials?.length) % testimonials?.length);
+    setCurrentIndex((prev) => (prev - 1 + avis?.length) % avis?.length);
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
-  const currentTestimonial = testimonials?.[currentIndex];
+  const avisActuel = avis?.[currentIndex];
 
   return (
     <section className="py-20 bg-muted">
       <div className="container mx-auto px-6">
-        {/* Section Header */}
+        {/* En-tête de section */}
         <div className="text-center mb-16">
           <p className="text-secondary font-body text-sm tracking-wider uppercase mb-4">
-            Guest Stories
+            Témoignages Clients
           </p>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground mb-6">
-            Authentic Experiences
+            Expériences Authentiques
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Discover what makes Luxe Haven special through the stories of our valued guests.
+            Découvrez ce qui rend Luxe Haven unique à travers les histoires de nos précieux clients.
           </p>
         </div>
 
-        {/* Testimonial Display */}
+        {/* Affichage du témoignage */}
         <div className="max-w-4xl mx-auto">
           <div className="luxury-card p-8 md:p-12 text-center relative overflow-hidden">
-            {/* Background Pattern */}
+            {/* Motif en arrière-plan */}
             <div className="absolute top-0 right-0 w-32 h-32 opacity-5">
               <Icon name="Quote" size={128} className="text-secondary" />
             </div>
 
-            {/* Rating Stars */}
+            {/* Étoiles de notation */}
             <div className="flex items-center justify-center space-x-1 mb-6">
-              {[...Array(currentTestimonial?.rating)]?.map((_, i) => (
+              {[...Array(avisActuel?.rating)]?.map((_, i) => (
                 <Icon
                   key={i}
                   name="Star"
@@ -124,47 +124,47 @@ const TestimonialCarousel = () => {
               ))}
             </div>
 
-            {/* Testimonial Title */}
+            {/* Titre du témoignage */}
             <h3 className="text-2xl md:text-3xl font-heading font-semibold text-foreground mb-6">
-              "{currentTestimonial?.title}"
+              "{avisActuel?.title}"
             </h3>
 
-            {/* Testimonial Content */}
+            {/* Contenu du témoignage */}
             <div className="mb-8">
               <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
-                {currentTestimonial?.content}
+                {avisActuel?.content}
               </p>
             </div>
 
-            {/* Guest Info */}
+            {/* Informations sur le client */}
             <div className="flex items-center justify-center space-x-4 mb-6">
               <div className="relative">
                 <Image
-                  src={currentTestimonial?.avatar}
-                  alt={currentTestimonial?.name}
+                  src={avisActuel?.avatar}
+                  alt={avisActuel?.name}
                   className="w-16 h-16 rounded-full object-cover"
                 />
-                {currentTestimonial?.verified && (
+                {avisActuel?.verified && (
                   <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-success rounded-full flex items-center justify-center">
                     <Icon name="Check" size={12} className="text-success-foreground" />
                   </div>
                 )}
               </div>
               <div className="text-left">
-                <h4 className="font-semibold text-foreground">{currentTestimonial?.name}</h4>
-                <p className="text-sm text-muted-foreground">{currentTestimonial?.location}</p>
-                <p className="text-xs text-secondary font-medium">{currentTestimonial?.date}</p>
+                <h4 className="font-semibold text-foreground">{avisActuel?.name}</h4>
+                <p className="text-sm text-muted-foreground">{avisActuel?.location}</p>
+                <p className="text-xs text-secondary font-medium">{avisActuel?.date}</p>
               </div>
             </div>
 
-            {/* Experience Details */}
+            {/* Détails de l'expérience */}
             <div className="bg-muted rounded-lg p-4 mb-8">
               <p className="text-sm text-muted-foreground">
-                <span className="font-medium">Experience:</span> {currentTestimonial?.experience}
+                <span className="font-medium">Expérience :</span> {avisActuel?.experience}
               </p>
             </div>
 
-            {/* Navigation Controls */}
+            {/* Contrôles de navigation */}
             <div className="flex items-center justify-center space-x-4">
               <Button
                 variant="outline"
@@ -174,9 +174,9 @@ const TestimonialCarousel = () => {
                 iconName="ChevronLeft"
               />
               
-              {/* Dots Indicator */}
+              {/* Indicateur de points */}
               <div className="flex items-center space-x-2">
-                {testimonials?.map((_, index) => (
+                {avis?.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => goToSlide(index)}
@@ -184,7 +184,7 @@ const TestimonialCarousel = () => {
                       index === currentIndex
                         ? 'bg-secondary' :'bg-border hover:bg-secondary/50'
                     }`}
-                    aria-label={`Go to testimonial ${index + 1}`}
+                    aria-label={`Aller au témoignage ${index + 1}`}
                   />
                 ))}
               </div>
@@ -200,14 +200,14 @@ const TestimonialCarousel = () => {
           </div>
         </div>
 
-        {/* Auto-play Indicator */}
+        {/* Indicateur de lecture automatique */}
         <div className="text-center mt-8">
           <button
             onClick={() => setIsAutoPlaying(!isAutoPlaying)}
             className="text-sm text-muted-foreground hover:text-foreground elegant-transition flex items-center space-x-2 mx-auto"
           >
             <Icon name={isAutoPlaying ? "Pause" : "Play"} size={16} />
-            <span>{isAutoPlaying ? "Pause" : "Play"} Auto-rotation</span>
+            <span>{isAutoPlaying ? "Pause" : "Lecture"} automatique</span>
           </button>
         </div>
       </div>
@@ -215,4 +215,4 @@ const TestimonialCarousel = () => {
   );
 };
 
-export default TestimonialCarousel;
+export default CarrouselAvis;

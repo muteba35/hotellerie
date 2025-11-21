@@ -16,18 +16,18 @@ const BookingWidget = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const guestOptions = [
-    { value: '1', label: '1 Guest' },
-    { value: '2', label: '2 Guests' },
-    { value: '3', label: '3 Guests' },
-    { value: '4', label: '4 Guests' },
-    { value: '5', label: '5+ Guests' }
+    { value: '1', label: '1 Invité' },
+    { value: '2', label: '2 Invités' },
+    { value: '3', label: '3 Invités' },
+    { value: '4', label: '4 Invités' },
+    { value: '5', label: '5+ Invités' }
   ];
 
   const roomOptions = [
-    { value: '1', label: '1 Room' },
-    { value: '2', label: '2 Rooms' },
-    { value: '3', label: '3 Rooms' },
-    { value: '4', label: '4+ Rooms' }
+    { value: '1', label: '1 Chambre' },
+    { value: '2', label: '2 Chambres' },
+    { value: '3', label: '3 Chambres' },
+    { value: '4', label: '4+ Chambres' }
   ];
 
   const handleInputChange = (field, value) => {
@@ -44,23 +44,23 @@ const BookingWidget = () => {
 
     setIsLoading(true);
     
-    // Simulate API call
+    // Simulation d’appel API
     setTimeout(() => {
       setAvailability({
         available: true,
         rooms: [
           {
-            type: 'Heritage Suite',
+            type: 'Suite Héritage',
             price: 450,
             available: 2
           },
           {
-            type: 'Garden Suite',
+            type: 'Suite Jardin',
             price: 380,
             available: 3
           },
           {
-            type: 'Executive Suite',
+            type: 'Suite Exécutive',
             price: 320,
             available: 1
           }
@@ -83,7 +83,7 @@ const BookingWidget = () => {
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date?.toLocaleDateString('en-US', { 
+    return date?.toLocaleDateString('fr-FR', { 
       weekday: 'short', 
       month: 'short', 
       day: 'numeric' 
@@ -93,14 +93,14 @@ const BookingWidget = () => {
   return (
     <div className="fixed bottom-6 right-6 z-40 max-w-md">
       <div className="luxury-card p-6 backdrop-luxury">
-        {/* Header */}
+        {/* En-tête */}
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-lg font-heading font-semibold text-foreground">
-              Book Your Stay
+              Réservez votre séjour
             </h3>
             <p className="text-sm text-muted-foreground">
-              Check availability & rates
+              Vérifiez la disponibilité & les tarifs
             </p>
           </div>
           <button
@@ -115,13 +115,13 @@ const BookingWidget = () => {
           </button>
         </div>
 
-        {/* Booking Form */}
+        {/* Formulaire de réservation */}
         <div className="space-y-4">
-          {/* Date Inputs */}
+          {/* Dates */}
           <div className="grid grid-cols-2 gap-3">
             <Input
               type="date"
-              label="Check-in"
+              label="Arrivée"
               value={bookingData?.checkIn}
               onChange={(e) => handleInputChange('checkIn', e?.target?.value)}
               min={new Date()?.toISOString()?.split('T')?.[0]}
@@ -129,7 +129,7 @@ const BookingWidget = () => {
             />
             <Input
               type="date"
-              label="Check-out"
+              label="Départ"
               value={bookingData?.checkOut}
               onChange={(e) => handleInputChange('checkOut', e?.target?.value)}
               min={bookingData?.checkIn || new Date()?.toISOString()?.split('T')?.[0]}
@@ -137,23 +137,23 @@ const BookingWidget = () => {
             />
           </div>
 
-          {/* Guest and Room Selection */}
+          {/* Invités et chambres */}
           <div className="grid grid-cols-2 gap-3">
             <Select
-              label="Guests"
+              label="Invités"
               options={guestOptions}
               value={bookingData?.guests}
               onChange={(value) => handleInputChange('guests', value)}
             />
             <Select
-              label="Rooms"
+              label="Chambres"
               options={roomOptions}
               value={bookingData?.rooms}
               onChange={(value) => handleInputChange('rooms', value)}
             />
           </div>
 
-          {/* Check Availability Button */}
+          {/* Bouton Vérifier disponibilité */}
           <Button
             variant="default"
             fullWidth
@@ -164,18 +164,18 @@ const BookingWidget = () => {
             iconPosition="left"
             disabled={!bookingData?.checkIn || !bookingData?.checkOut}
           >
-            {isLoading ? 'Checking...' : 'Check Availability'}
+            {isLoading ? 'Vérification...' : 'Vérifier la disponibilité'}
           </Button>
         </div>
 
-        {/* Availability Results */}
+        {/* Résultats disponibilité */}
         {isExpanded && availability && (
           <div className="mt-6 pt-6 border-t border-border animate-in slide-in-from-top duration-300">
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="font-semibold text-foreground">Available Rooms</h4>
+                <h4 className="font-semibold text-foreground">Chambres disponibles</h4>
                 <div className="text-sm text-muted-foreground">
-                  {availability?.totalNights} {availability?.totalNights === 1 ? 'night' : 'nights'}
+                  {availability?.totalNights} {availability?.totalNights === 1 ? 'nuit' : 'nuits'}
                 </div>
               </div>
               <div className="text-xs text-muted-foreground">
@@ -192,12 +192,12 @@ const BookingWidget = () => {
                   <div>
                     <h5 className="font-medium text-foreground text-sm">{room?.type}</h5>
                     <p className="text-xs text-muted-foreground">
-                      {room?.available} available
+                      {room?.available} disponible(s)
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-primary">${room?.price}</p>
-                    <p className="text-xs text-muted-foreground">per night</p>
+                    <p className="font-semibold text-primary">{room?.price} €</p>
+                    <p className="text-xs text-muted-foreground">par nuit</p>
                   </div>
                 </div>
               ))}
@@ -210,21 +210,21 @@ const BookingWidget = () => {
               iconName="Calendar"
               iconPosition="left"
             >
-              Reserve Now
+              Réserver maintenant
             </Button>
           </div>
         )}
 
-        {/* Quick Actions */}
+        {/* Actions rapides */}
         <div className="mt-4 pt-4 border-t border-border">
           <div className="flex items-center justify-between text-sm">
             <button className="text-secondary hover:text-secondary/80 elegant-transition flex items-center space-x-1">
               <Icon name="Phone" size={14} />
-              <span>Call Us</span>
+              <span>Appelez-nous</span>
             </button>
             <button className="text-secondary hover:text-secondary/80 elegant-transition flex items-center space-x-1">
               <Icon name="MessageCircle" size={14} />
-              <span>Live Chat</span>
+              <span>Chat en direct</span>
             </button>
             <button className="text-secondary hover:text-secondary/80 elegant-transition flex items-center space-x-1">
               <Icon name="Mail" size={14} />

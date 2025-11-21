@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 import Button from './Button';
-
+ 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -47,10 +47,7 @@ const Header = () => {
               <div className="relative">
                 <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center group-hover:scale-105 elegant-transition">
                   <svg 
-                    viewBox="0 0 24 24" 
-                    className="w-6 h-6 text-primary-foreground"
-                    fill="currentColor"
-                  >
+                    viewBox="0 0 24 24" className="w-6 h-6 text-primary-foreground" fill="currentColor">
                     <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
                     <path d="M8 11h8v2H8z" fill="var(--color-secondary)"/>
                     <path d="M10 8h4v2h-4z" fill="var(--color-secondary)"/>
@@ -95,16 +92,18 @@ const Header = () => {
                 size="sm"
                 className="text-primary border-primary hover:bg-primary hover:text-primary-foreground"
               >
-                Check Availability
+                Check Availability 
               </Button>
+             
+              {/* Reservation */}
+              <Link to="/inscription">
               <Button 
-                variant="default" 
-                size="sm"
-                className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
-              >
-                Reserve Now
+                variant="default" size="sm"
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/90">Se connecter
               </Button>
-            </div>
+               </Link>
+         </div>
+            
 
             {/* Mobile Menu Button */}
             <button
@@ -154,14 +153,14 @@ const Header = () => {
                     fullWidth
                     className="text-primary border-primary hover:bg-primary hover:text-primary-foreground"
                   >
-                    Check Availability
+                    Check Disponibilité
                   </Button>
                   <Button 
                     variant="default" 
                     fullWidth
                     className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
                   >
-                    Reserve Now
+                    Se connecter
                   </Button>
                 </div>
               </div>

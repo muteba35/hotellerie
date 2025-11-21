@@ -2,24 +2,11 @@ import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '../../components/ui/Header';
 import HeroSection from './components/HeroSection';
-import SeasonalOfferings from './components/SeasonalOfferings';
-import TestimonialCarousel from './components/TestimonialCarousel';
-import SocialValidation from './components/SocialValidation';
-import BookingWidget from './components/BookingWidget';
-import NewsletterSignup from './components/NewsletterSignup';
 import Footer from './components/Footer';
 
-const Homepage = () => {
-  useEffect(() => {
-    // Comportement de défilement fluide
-    document.documentElement.style.scrollBehavior = 'smooth';
+const Inscription = () => {
+    const maes="salut"
     
-    // Nettoyage
-    return () => {
-      document.documentElement.style.scrollBehavior = 'auto';
-    };
-  }, []);
-
   return (
     <>
       <Helmet>
@@ -45,28 +32,17 @@ const Homepage = () => {
 
         {/* Contenu principal */}
         <main>
-          {/* Section Héro avec expérience immersive */}
+        {/* Section Héro avec expérience immersive */}
           <HeroSection />
-
-          {/* Offres saisonnières */}
-          <SeasonalOfferings />
-
-          {/* Témoignages des clients */}
-          <TestimonialCarousel />
-
-          {/* Inscription à la newsletter */}
-          <NewsletterSignup />
+         
         </main>
 
         {/* Pied de page */}
         <Footer />
 
-        {/* Éléments flottants */}
-        <SocialValidation />
-        <BookingWidget />
       </div>
     </>
   );
 };
 
-export default Homepage;
+export default Inscription;
