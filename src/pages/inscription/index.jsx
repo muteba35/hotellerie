@@ -5,8 +5,7 @@ import HeroSection from './components/HeroSection';
 import Footer from './components/Footer';
 
 const Inscription = () => {
-    const maes="salut"
-    
+   
   return (
     <>
       <Helmet>

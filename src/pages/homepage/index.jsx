@@ -21,7 +21,7 @@ const Homepage = () => {
   }, []);
 
   return (
-    <>
+    <div>
       <Helmet>
         <title>Hôtel Luxe Haven - Là où le luxe rencontre l’authenticité</title>
         <meta 
@@ -65,7 +65,7 @@ const Homepage = () => {
         <SocialValidation />
         <BookingWidget />
       </div>
-    </>
+    </div>
   );
 };
 
