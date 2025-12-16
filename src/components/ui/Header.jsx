@@ -155,6 +155,7 @@ const Header = () => {
                   >
                     Check Disponibilité
                   </Button>
+               <Link to="/inscription">
                   <Button 
                     variant="default" 
                     fullWidth
@@ -162,6 +163,7 @@ const Header = () => {
                   >
                     Se connecter
                   </Button>
+                  </Link>
                 </div>
               </div>
             </nav>
