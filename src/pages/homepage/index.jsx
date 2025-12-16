@@ -62,8 +62,7 @@ const Homepage = () => {
         <Footer />
 
         {/* Éléments flottants */}
-        <SocialValidation />
-        <BookingWidget />
+     
       </div>
     </div>
   );
