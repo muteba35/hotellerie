@@ -1,24 +1,42 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, User, Lock } from "lucide-react";
+import axios from "axios";
 
 const HeroSection = () => {
+  const navigate = useNavigate(); // pour redirection
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     nom: "",
-    postNom: "",
+    postnom: "",
     email: "",
     password: "",
   });
+  const [errorMsg, setErrorMsg] = useState(""); // message d'erreur
+  const [loading, setLoading] = useState(false); // état chargement
 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Formulaire soumis :", formData);
-    // ici, on enverra les données vers le backend plus tard
+    setErrorMsg(""); // reset message
+    setLoading(true);
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/register", formData);
+      alert(response.data.message); // succès
+      setLoading(false);
+      navigate("/connexion"); // redirection vers la page de connexion
+    } catch (error) {
+      setLoading(false);
+      if (error.response && error.response.data) {
+        setErrorMsg(error.response.data.message);
+      } else {
+        setErrorMsg("Erreur serveur. Veuillez réessayer plus tard.");
+      }
+    }
   };
 
   return (
@@ -27,16 +45,16 @@ const HeroSection = () => {
         <h2 className="text-2xl font-semibold text-gray-800 text-center mb-2">
           Créez votre compte
         </h2>
-        <p className="text-sm text-gray-500 text-center mb-8">
+        <p className="text-sm text-gray-500 text-center mb-4">
           Commencez votre expérience Luxe Haven dès aujourd’hui
         </p>
+
+        {errorMsg && <p className="text-red-500 text-sm text-center mb-4">{errorMsg}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Nom */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nom
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
             <div className="relative">
               <User className="absolute left-3 top-3 text-gray-400" size={18} />
               <input
@@ -52,15 +70,13 @@ const HeroSection = () => {
 
           {/* Post-nom */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Post-nom
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Post-nom</label>
             <div className="relative">
               <User className="absolute left-3 top-3 text-gray-400" size={18} />
               <input
                 type="text"
-                value={formData.postNom}
-                onChange={(e) => handleChange("postNom", e.target.value)}
+                value={formData.postnom}
+                onChange={(e) => handleChange("postnom", e.target.value)}
                 required
                 placeholder="Entrez votre post-nom"
                 className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
@@ -70,9 +86,7 @@ const HeroSection = () => {
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 text-gray-400" size={18} />
               <input
@@ -88,9 +102,7 @@ const HeroSection = () => {
 
           {/* Mot de passe */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Mot de passe
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-gray-400" size={18} />
               <input
@@ -98,7 +110,7 @@ const HeroSection = () => {
                 value={formData.password}
                 onChange={(e) => handleChange("password", e.target.value)}
                 required
-                placeholder="********"
+                placeholder=""
                 className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
               />
               <div
@@ -113,18 +125,18 @@ const HeroSection = () => {
           {/* Bouton d'inscription */}
           <button
             type="submit"
-            className="w-full bg-secondary hover:bg-secondary/90 text-white py-2 rounded-lg shadow-md transition font-medium"
+            disabled={loading}
+            className={`w-full bg-secondary hover:bg-secondary/90 text-white py-2 rounded-lg shadow-md transition font-medium ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            S’inscrire
+            {loading ? "Inscription en cours..." : "S’inscrire"}
           </button>
         </form>
 
         {/* Liens */}
         <div className="mt-6 text-center">
-          <Link
-            to="/connexion"
-            className="text-sm text-secondary hover:underline font-medium"
-          >
+          <Link to="/connexion" className="text-sm text-secondary hover:underline font-medium">
             Déjà un compte ? Connectez-vous
           </Link>
           <div className="mt-2">
@@ -140,5 +152,5 @@ const HeroSection = () => {
     </div>
   );
 };
-// Export du composant pour pouvoir l'utiliser dans d'autres fichiers
+
 export default HeroSection;
