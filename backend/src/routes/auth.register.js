@@ -26,7 +26,7 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Email déjà utilisé" });
 
     // mot de passe sécurisé
-    const passwordRegex = /^(?=.[A-Z])(?=.[\W]).{8,}$/;
+   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
