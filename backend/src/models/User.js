@@ -1,41 +1,22 @@
 const mongoose = require("mongoose");
 
-// Définir le schéma utilisateur
 const userSchema = new mongoose.Schema({
-  nom: {
-    type: String,
-    required: true,
-    minlength: 2, // Minimum 2 caractères
-    trim: true
-  },
-  postnom: {
-    type: String,
-    required: true,
-    minlength: 2,
-    trim: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true, // Empêche les doublons
+  nom: { type: String, required: true, minlength: 2, trim: true },
+  postnom: { type: String, required: true, minlength: 2, trim: true },
+  email: { 
+    type: String, 
+    required: true, 
+    unique: true, // empêche les doublons
     lowercase: true,
     trim: true,
     match: [/.+@.+\..+/, "Adresse email invalide"]
   },
-  password: {
-    type: String,
-    required: true,
-    minlength: 8, // Minimum 8 caractères
-  },
-  isActive: {
-    type: Boolean,
-    default: false // Le compte est inactif tant que l'utilisateur n'a pas confirmé son email
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+  password: { type: String, required: true, minlength: 8 },
+  isActive: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now }
 });
 
-// Export du modèle
+// S'assure que l'index unique est créé
+userSchema.index({ email: 1 }, { unique: true });
+
 module.exports = mongoose.model("User", userSchema);
