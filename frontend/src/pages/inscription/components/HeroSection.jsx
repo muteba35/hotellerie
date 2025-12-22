@@ -25,7 +25,7 @@ const HeroSection = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/register", formData);
+      const response = await axios.post("https://hotellerie.onrender.com/api/auth/register", formData);
       alert(response.data.message); // succès
       setLoading(false);
       navigate("/connexion"); // redirection vers la page de connexion
