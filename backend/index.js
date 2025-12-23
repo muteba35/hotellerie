@@ -6,34 +6,13 @@ require("dotenv").config();
 const app = express();
 
 // middlewares
-/* =======================
-   CORS CONFIGURATION
-======================= */
-const allowedOrigins = [
-  "https://hotellerie.onrender.com",
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // autorise mobile / navigateur sans origin (ex: apps)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
-
-// important pour preflight (mobile)
-app.options("*", cors());
-
+app.use(cors({
+  origin: [
+    "https://hotellerie.onrender.com",
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(express.json());
 
 // test route
