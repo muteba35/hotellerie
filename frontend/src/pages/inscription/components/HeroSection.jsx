@@ -25,7 +25,13 @@ const HeroSection = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://hotellerie.onrender.com/api/auth/register", formData);
+      const response = await axios.post("https://hotellerie.onrender.com/api/auth/register", 
+        formData,{
+        timeout: 15000, 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       alert(response.data.message); // succès
       setLoading(false);
       navigate("/connexion"); // redirection vers la page de connexion
