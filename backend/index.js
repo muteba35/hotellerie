@@ -5,11 +5,12 @@ require("dotenv").config();
 
 const app = express();
 
-/*CORS CONFIGURATION */
+// middlewares
+/* =======================
+   CORS CONFIGURATION
+======================= */
 const allowedOrigins = [
   "https://hotellerie.onrender.com",
-  "http://localhost:3000",
-  "http://localhost:5173",
 ];
 
 app.use(
@@ -33,26 +34,24 @@ app.use(
 // important pour preflight (mobile)
 app.options("*", cors());
 
-/* MIDDLEWARES */
 app.use(express.json());
 
-/* TEST ROUTE*/
+// test route
 app.get("/", (req, res) => {
   res.send("Backend Hotellerie OK");
 });
 
-/* ROUTES*/
+// routes
 const registerRoute = require("./src/routes/auth.register");
 app.use("/api/auth", registerRoute);
 
-/* MONGODB*/
+// mongodb
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connecté avec succès"))
   .catch((err) => console.error("Erreur MongoDB :", err));
 
-/* SERVER */
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log("Serveur lancé sur http://localhost:" + PORT);
+  console.log("Serveur lancé sur http://localhost:" + PORT);
 });
