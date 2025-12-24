@@ -1,89 +1,50 @@
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Mail, User, Lock } from "lucide-react";
+import axios from "axios";
 
-  import React, { useState } from "react"; 
-  // React : pour créer le composant
-  // useState : pour gérer les états (formulaire, chargement, erreurs)
-  
-  import { Link, useNavigate } from "react-router-dom";
-  // Link : navigation sans recharger la page
-  // useNavigate : redirection programmée après inscription
-  
-  import { Eye, EyeOff, Mail, User, Lock } from "lucide-react";
-  // Icônes utilisées dans le formulaire
-  
-  import axios from "axios";
-  // axios : permet d'envoyer des requêtes HTTP (POST, GET, etc.)
-  
-  const HeroSection = () => {
-  
-    const navigate = useNavigate(); 
-    // Sert à rediriger l'utilisateur vers une autre page
-  
-    const [showPassword, setShowPassword] = useState(false);
-    // Gère l'affichage ou non du mot de passe
-  
-    const [formData, setFormData] = useState({
-      nom: "",
-      postnom: "",
-      email: "",
-      password: "",
-    });
-    // Stocke les données saisies dans le formulaire
-  
-    const [errorMsg, setErrorMsg] = useState("");
-    // Stocke les messages d'erreur venant du serveur
-  
-    const [loading, setLoading] = useState(false);
-    // Indique si la requête est en cours (chargement)
-  
-    const handleChange = (field, value) => {
-      // Met à jour dynamiquement un champ du formulaire
-      setFormData({ ...formData, [field]: value });
-    };
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault(); 
-      // Empêche le rechargement de la page
-  
-      setErrorMsg(""); 
-      // Réinitialise les erreurs
-  
-      setLoading(true); 
-      // Active l'état de chargement
-  
-      try {
-        const response = await axios.post(
-          "https://hotellerie.onrender.com/api/auth/register",
-          formData,
-          {
-            timeout: 15000, // délai maximum de réponse
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-  
-        alert(response.data.message); 
-        // Message de succès envoyé par le backend
-  
-        setLoading(false); 
-        // Désactive le chargement
-  
-        navigate("/connexion"); 
-        // Redirection vers la page de connexion
-  
-      } catch (error) {
-        setLoading(false); 
-        // Désactive le chargement en cas d'erreur
-  
-        if (error.response && error.response.data) {
-          // Erreur venant du backend (ex: email déjà utilisé)
-          setErrorMsg(error.response.data.message);
-        } else {
-          // Erreur réseau ou serveur indisponible
-          setErrorMsg("Erreur serveur. Veuillez réessayer plus tard.");
-        }
+const HeroSection = () => {
+  const navigate = useNavigate(); // pour redirection
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    nom: "",
+    postnom: "",
+    email: "",
+    password: "",
+  });
+  const [errorMsg, setErrorMsg] = useState(""); // message d'erreur
+  const [loading, setLoading] = useState(false); // état chargement
+
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMsg(""); // reset message
+    setLoading(true);
+
+    try {
+      const response = await axios.post("https://hotellerie.onrender.com/api/auth/register", 
+        formData,{
+        timeout: 15000, 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      alert(response.data.message); // succès
+      setLoading(false);
+      navigate("/connexion"); // redirection vers la page de connexion
+    } catch (error) {
+      setLoading(false);
+      if (error.response && error.response.data) {
+        setErrorMsg(error.response.data.message);
+      } else {
+        setErrorMsg("Erreur serveur. Veuillez réessayer plus tard.");
       }
-    };
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 px-4 py-10">
       <div className="w-full max-w-md bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl p-8 border border-gray-200">
