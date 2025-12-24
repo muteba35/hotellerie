@@ -1,8 +1,18 @@
+// React : pour créer le composant
+// useState : pour gérer les états (formulaire, chargement, erreurs)
 import React, { useState } from "react";
+
+// Link : navigation sans recharger la page
+// useNavigate : redirection programmée après inscription
 import { Link, useNavigate } from "react-router-dom";
+
+// Icônes utilisées dans le formulaire
 import { Eye, EyeOff, Mail, User, Lock } from "lucide-react";
+
+// axios : permet d'envoyer des requêtes HTTP (POST, GET, etc.)
 import axios from "axios";
 
+// Stocke les données saisies dans le formulaire
 const HeroSection = () => {
   const navigate = useNavigate(); // pour redirection
   const [showPassword, setShowPassword] = useState(false);
@@ -13,16 +23,17 @@ const HeroSection = () => {
     password: "",
   });
   const [errorMsg, setErrorMsg] = useState(""); // message d'erreur
-  const [loading, setLoading] = useState(false); // état chargement
+  const [loading, setLoading] = useState(false); // Indique si la requête est en cours (chargement)
 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
 
   const handleSubmit = async (e) => {
+     // Empêche le rechargement de la page
     e.preventDefault();
     setErrorMsg(""); // reset message
-    setLoading(true);
+    setLoading(true);// Active l'état de chargement
 
     try {
       const response = await axios.post("https://hotellerie.onrender.com/api/auth/register", 
@@ -33,13 +44,16 @@ const HeroSection = () => {
         },
       });
       alert(response.data.message); // succès
-      setLoading(false);
+      setLoading(false);//Désactive le chargement en cas d'erreur
       navigate("/connexion"); // redirection vers la page de connexion
     } catch (error) {
+      // Désactive le chargement en cas d'erreur
       setLoading(false);
       if (error.response && error.response.data) {
+        // Erreur venant du backend
         setErrorMsg(error.response.data.message);
       } else {
+           // Erreur réseau ou serveur indisponible
         setErrorMsg("Erreur serveur. Veuillez réessayer plus tard.");
       }
     }
