@@ -1,7 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
-const sendEmail = require("../user_mail/sendEmail");
 
 const router = express.Router();
 
@@ -38,25 +37,13 @@ router.post("/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //GÉNÉRATION DU TOKEN
-    
-        const activationToken = crypto.randomBytes(32).toString("hex");
-    
-        const activationTokenExpires = Date.now() + 60 * 60 * 1000; // +1h
-    
-      
-        // CRÉATION UTILISATEUR
-      
-        const newUser = new User({
-          nom,
-          postnom,
-          email,
-          password: hashedPassword,
-    
-          isActive: false, // compte désactivé
-          activationToken,
-          activationTokenExpires,
-        });
+    const newUser = new User({
+      nom,
+      postnom,
+      email,
+      password: hashedPassword,
+      isActive: false,
+    });
 
     await newUser.save();
 
