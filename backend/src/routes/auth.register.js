@@ -28,16 +28,7 @@ router.post("/register", async (req, res) => {
     if (existingUser)
       return res.status(400).json({ message: "Email déjà utilisé" });
 
-    // FORCE MOT DE PASSE ✅
-    const passwordRegex =
-      /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[\W_]).{8,}$/;
-
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        message:
-          "Mot de passe faible : 8 caractères minimum, une majuscule, un chiffre et un caractère spécial",
-      });
-    }
+    
 
     // HASH
     const hashedPassword = await bcrypt.hash(password, 10);
