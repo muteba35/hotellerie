@@ -39,26 +39,13 @@ router.post("/register", async (req, res) => {
 
     // FORCE DU MOT DE PASSE
 
-    const passwordRegex =
-      /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[\W_]).{8,}$/;
-
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        message:
-          "Mot de passe faible : 8 caractères minimum, une majuscule, un chiffre et un caractère spécial",
-      });
-    }
-
+   
    
     // HASH DU MOT DE PASSE
- 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-
     //GÉNÉRATION DU TOKEN
-
     const activationToken = crypto.randomBytes(32).toString("hex");
-
     const activationTokenExpires = Date.now() + 60 * 60 * 1000; // +1h
 
   
