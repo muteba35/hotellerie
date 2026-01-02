@@ -27,12 +27,30 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 8,
     },
+
+    // Compte activé ou non
     isActive: {
       type: Boolean,
       default: false,
     },
+
+    // Token de confirmation envoyé par email
+    activationToken: {
+      type: String,
+    },
+
+    // Date d’expiration du token
+    activationTokenExpires: {
+      type: Date,
+    },
+
+    // Date et heure de confirmation du compte
+    emailVerifiedAt: {
+      type: Date,
+      default: null,
+    },
   },
-  { timestamps: true } 
+  { timestamps: true } // createdAt / updatedAt
 );
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);
