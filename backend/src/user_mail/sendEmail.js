@@ -9,8 +9,13 @@ const sendEmail = async ({ to, subject, html }) => {
     },
   });
 
+  
+  await transporter.verify(); 
+  console.log("Connexion Gmail OK");
+
+
   await transporter.sendMail({
-    from: '"Hotellerie" <${process.env.EMAIL_USER}>',
+    from: `"Hotellerie" <${process.env.EMAIL_USER}>`,
     to,
     subject,
     html,
