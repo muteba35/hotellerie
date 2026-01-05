@@ -1,5 +1,5 @@
 require("dotenv").config();
-const sendEmail = require("./user_mail/sendEmail");
+const sendEmail = require("./src/user_mail/sendEmail");
 
 sendEmail({
   to: process.env.EMAIL_USER,
