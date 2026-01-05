@@ -45,7 +45,7 @@ const HeroSection = () => {
       });
       alert(response.data.message); // succès
       setLoading(false);//Désactive le chargement en cas d'erreur
-      navigate("/attempts_inscription"); // redirection vers la page de connexion
+      navigate("/Attente"); // redirection vers la page de connexion
     } catch (error) {
       // Désactive le chargement en cas d'erreur
       setLoading(false);

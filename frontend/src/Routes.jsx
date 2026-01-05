@@ -10,6 +10,7 @@ import ExperiencesGallery from './pages/experiences-gallery';
 import Homepage from './pages/homepage';
 import Inscription from './pages/inscription';
 import Connexion from './pages/connexion';
+import Attente from './pages/attente';
 
 const Routes = () => {
   return (
@@ -24,8 +25,9 @@ const Routes = () => {
         <Route path="/culinary-journey" element={<CulinaryJourney />} />
         <Route path="/experiences-gallery" element={<ExperiencesGallery />} />
         <Route path="/homepage" element={<Homepage />} />
-        <Route path="/Inscription" element={<Inscription />} />
+        <Route path="/inscription" element={<Inscription />} />
         <Route path="/connexion" element={<Connexion />} />
+        <Route path="/attente" element={<Attente />} />
     
         <Route path="*" element={<NotFound />} />
       </RouterRoutes>

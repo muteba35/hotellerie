@@ -4,7 +4,7 @@ import Header from '../../components/ui/Header';
 import HeroSection from './components/HeroSection';
 import Footer from './components/Footer';
 
-const Inscription = () => {
+const Attente = () => {
    
   return (
     <>
@@ -44,4 +44,4 @@ const Inscription = () => {
   );
 };
 
-export default Inscription;
+export default Attente;
