@@ -1,29 +1,22 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmail = async ({ to, subject, html }) => {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,          
-    secure: false,      
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
+  try {
+    const data = await resend.emails.send({
+      from: process.env.EMAIL_FROM,
+      to,
+      subject,
+      html,
+    });
 
-  // Test connexion SMTP
-  await transporter.verify();
-  console.log("SMTP Gmail connecté");
-
-  await transporter.sendMail({
-    from: `"Hotellerie" <${process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    html,
-  });
+    console.log("Email envoyé :", data);
+    return data;
+  } catch (error) {
+    console.error("Erreur envoi email :", error);
+    throw error;
+  }
 };
 
-module.exports = sendEmail;
+module.exports = sendEmail;
