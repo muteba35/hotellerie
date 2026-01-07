@@ -12,23 +12,23 @@ router.get("/verify-email/:token", async (req, res) => {
     const user = await User.findOne({ activationToken: token });
 
     if (!user) {
-      return res.status(400).json({
-        message: "Lien invalide ou déjà utilisé",
-      });
+       return res.redirect(
+        `${process.env.FRONTEND_URL}/verification_email?status=invalid`
+      );
     }
 
     // 2️⃣ Vérifier expiration
     if (user.activationTokenExpires < Date.now()) {
-      return res.status(400).json({
-        message: "Lien expiré. Veuillez demander un nouveau lien.",
-      });
+     return res.redirect(
+        `${process.env.FRONTEND_URL}/verification_email?status=expired`
+      );
     }
 
     // 3️⃣ Déjà activé ?
     if (user.isActive) {
-      return res.status(400).json({
-        message: "Compte déjà activé",
-      });
+      return res.redirect(
+         `${process.env.FRONTEND_URL}/verification_email?status=already`
+      );
     }
 
     // 4️⃣ Activation
@@ -43,14 +43,14 @@ router.get("/verify-email/:token", async (req, res) => {
 
     // 6️⃣ Redirection frontend
     return res.redirect(
-       `${process.env.FRONTEND_URL}/connexion`
+      `${process.env.FRONTEND_URL}/verification_email?status=success`
     );
 
   } catch (error) {
     console.error("VERIFY EMAIL ERROR :", error);
-    return res.status(500).json({
-      message: "Erreur serveur",
-    });
+   return res.redirect(
+       `${process.env.FRONTEND_URL}/verification_email?status=error`
+    );
   }
 });
 
