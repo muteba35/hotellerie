@@ -11,7 +11,6 @@ import Homepage from './pages/homepage';
 import Inscription from './pages/inscription';
 import Connexion from './pages/connexion';
 import Attente from './pages/attente';
-import Attente from './pages/verification_email';
 import Verification_email from "pages/verification_email";
 
 const Routes = () => {
