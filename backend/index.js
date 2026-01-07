@@ -16,7 +16,10 @@ app.get("/", (req, res) => {
 
 // routes
 const registerRoute = require("./src/routes/auth.register");
+const verifyEmailRoute = require("./src/routes/auth.verify");
+
 app.use("/api/auth", registerRoute);
+app.use("/api/auth", verifyEmailRoute);
  
 // mongodb
 mongoose
