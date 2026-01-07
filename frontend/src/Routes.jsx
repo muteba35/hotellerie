@@ -11,6 +11,8 @@ import Homepage from './pages/homepage';
 import Inscription from './pages/inscription';
 import Connexion from './pages/connexion';
 import Attente from './pages/attente';
+import Attente from './pages/verification_email';
+import Verification_email from "pages/verification_email";
 
 const Routes = () => {
   return (
@@ -28,6 +30,8 @@ const Routes = () => {
         <Route path="/inscription" element={<Inscription />} />
         <Route path="/connexion" element={<Connexion />} />
         <Route path="/attente" element={<Attente />} />
+        <Route path="/verification_email" element={<Verification_email />} />
+       
     
         <Route path="*" element={<NotFound />} />
       </RouterRoutes>
