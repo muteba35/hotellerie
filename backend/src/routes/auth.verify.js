@@ -8,14 +8,20 @@ router.get("/verify-email/:token", async (req, res) => {
     //recuperation du token a partir de l'url
     const { token } = req.params;
 
+     console.log("🔑 TOKEN REÇU :", token);
+
     // 1️⃣ Chercher l’utilisateur
     const user = await User.findOne({ activationToken: token });
+      console.log("👤 USER TROUVÉ :", user);
 
     if (!user) {
        return res.redirect(
         `${process.env.FRONTEND_URL}/verification_email?status=invalid`
       );
     }
+
+    console.log("⏰ EXPIRE :", user.activationTokenExpires);
+    console.log("🕒 NOW :", Date.now());
 
     // 2️⃣ Vérifier expiration
     if (user.activationTokenExpires < Date.now()) {
@@ -40,6 +46,9 @@ router.get("/verify-email/:token", async (req, res) => {
     user.activationTokenExpires = undefined;
 
     await user.save();
+
+    console.log("✅ COMPTE ACTIVÉ");
+    console.log("TOKEN SAUVÉ :", user.activationToken);
 
     // 6️⃣ Redirection frontend
     return res.redirect(
