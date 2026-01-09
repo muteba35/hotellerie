@@ -14,23 +14,36 @@ app.get("/", (req, res) => {
   res.send("Backend Hotellerie OK");
 });
 
-// routes
+// routes (ON LES DÉCLARE MAIS ON NE LES UTILISE PAS ENCORE)
 const registerRoute = require("./src/routes/auth.register");
 const verifyEmailRoute = require("./src/routes/auth.verify");
 
-app.use("/api/auth", registerRoute);
-app.use("/api/auth", verifyEmailRoute);
- 
-// mongodb
-  mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("MongoDB connecté");
-    console.log("📦 DB NAME :", mongoose.connection.name);
-  })
-  .catch((err) => console.error("Erreur MongoDB :", err));
-
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log("Serveur lancé sur http://localhost:" + PORT);
-});
+
+// CONNEXION MONGODB AVANT LES ROUTES
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(async () => {
+    console.log("MongoDB connecté");
+    console.log("DB NAME :", mongoose.connection.name);
+
+    // DEBUG IMPORTANT
+    const collections = await mongoose.connection.db
+      .listCollections()
+      .toArray();
+    console.log(
+      "COLLECTIONS :",
+      collections.map(c => c.name)
+    );
+
+    // ROUTES APRÈS CONNEXION
+    app.use("/api/auth", registerRoute);
+    app.use("/api/auth", verifyEmailRoute);
+
+    app.listen(PORT, () => {
+      console.log("Serveur lancé sur http://localhost:" + PORT);
+    });
+  })
+  .catch((err) => {
+    console.error("Erreur MongoDB :", err);
+  });
