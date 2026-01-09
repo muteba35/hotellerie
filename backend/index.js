@@ -22,9 +22,12 @@ app.use("/api/auth", registerRoute);
 app.use("/api/auth", verifyEmailRoute);
  
 // mongodb
-mongoose
+  mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connecté avec succès"))
+  .then(() => {
+    console.log("MongoDB connecté");
+    console.log("📦 DB NAME :", mongoose.connection.name);
+  })
   .catch((err) => console.error("Erreur MongoDB :", err));
 
 const PORT = process.env.PORT || 5000;
