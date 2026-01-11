@@ -44,7 +44,6 @@ const HeroSection = () => {
         },
       });
       alert(response.data.message); // succès
-      localStorage.setItem("pendingEmail", email)
       setLoading(false);//Désactive le chargement en cas d'erreur
       navigate("/Attente"); // redirection vers la page de connexion
     } catch (error) {

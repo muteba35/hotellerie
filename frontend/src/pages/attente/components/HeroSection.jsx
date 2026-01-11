@@ -11,15 +11,21 @@ const HeroSection = () => {
     setError("");
     setSuccess(false);
 
+    const email = localStorage.getItem("pendingEmail");
+
+    if (!email) {
+      setError("Email introuvable. Veuillez vous réinscrire.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch(
         "https://hotellerie.onrender.com/api/auth/resend-verification",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: localStorage.getItem("pendingEmail"),
-          }),
+          body: JSON.stringify({ email }),
         }
       );
 
@@ -31,7 +37,7 @@ const HeroSection = () => {
         setError(data.message);
       }
     } catch {
-      setError("Erreur réseau");
+      setError("Erreur réseau. Réessayez plus tard.");
     } finally {
       setLoading(false);
     }
@@ -40,7 +46,7 @@ const HeroSection = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="bg-white border rounded-xl shadow-md max-w-md w-full p-8 text-center">
-        
+
         <div className="mx-auto w-12 h-12 bg-primary rounded-lg flex items-center justify-center mb-4">
           <MailCheck className="text-white w-6 h-6" />
         </div>
@@ -50,7 +56,12 @@ const HeroSection = () => {
         </h2>
 
         <p className="text-gray-600 text-sm mb-4">
-          Un lien de confirmation vous a été envoyé.
+          Un lien de confirmation a été envoyé à votre adresse email.  
+          Cliquez sur ce lien pour activer votre compte.
+        </p>
+
+        <p className="text-xs text-gray-500 mb-6">
+          Pensez à vérifier le dossier <b>Spam</b> si vous ne voyez rien.
         </p>
 
         {!success && (
@@ -60,7 +71,7 @@ const HeroSection = () => {
             className="w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center gap-2"
           >
             <RefreshCcw size={16} />
-            {loading ? "Envoi..." : "Renvoyer le lien"}
+            {loading ? "Envoi en cours..." : "Renvoyer le lien"}
           </button>
         )}
 
