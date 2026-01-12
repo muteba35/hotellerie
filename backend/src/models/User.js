@@ -14,6 +14,12 @@ const userSchema = new mongoose.Schema(
       minlength: 2,
       trim: true,
     },
+    prenom: {
+      type: String,
+      required: true,
+      minlength: 2,
+      trim: true,
+    },
     email: {
       type: String,
       required: true,

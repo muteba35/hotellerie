@@ -17,6 +17,9 @@ router.post("/register", async (req, res) => {
     if (!postnom || postnom.length < 2)
       return res.status(400).json({ message: "Postnom invalide" });
 
+    if (!prenom || prenom.length < 2)
+      return res.status(400).json({ message: "Prenom invalide" });
+
     if (!email || !email.includes("@"))
       return res.status(400).json({ message: "Email invalide" });
 

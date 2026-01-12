@@ -39,7 +39,7 @@ router.post("/resend-verification", async (req, res) => {
     // 4️⃣ Email (DESIGN IDENTIQUE)
     await sendEmail({
       to: email,
-      subject: "Nouveau lien de confirmation — Hotellerie",
+      subject: `Nouveau lien de confirmation — ${new Date().toLocaleString()}`,
       html: `
       <div style="max-width:600px;margin:auto;font-family:Arial,sans-serif;background:#ffffff;border-radius:12px;padding:30px;border:1px solid #eee">
         
