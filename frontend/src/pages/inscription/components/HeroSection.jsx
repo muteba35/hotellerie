@@ -19,6 +19,7 @@ const HeroSection = () => {
   const [formData, setFormData] = useState({
     nom: "",
     postnom: "",
+    prenom: "",
     email: "",
     password: "",
   });
@@ -98,6 +99,22 @@ const HeroSection = () => {
                 type="text"
                 value={formData.postnom}
                 onChange={(e) => handleChange("postnom", e.target.value)}
+                required
+                placeholder="Entrez votre post-nom"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
+              />
+            </div>
+          </div>
+
+          {/* Prenom */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Post-nom</label>
+            <div className="relative">
+              <User className="absolute left-3 top-3 text-gray-400" size={18} />
+              <input
+                type="text"
+                value={formData.prenom}
+                onChange={(e) => handleChange("prenom", e.target.value)}
                 required
                 placeholder="Entrez votre post-nom"
                 className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
