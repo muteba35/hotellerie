@@ -147,15 +147,13 @@ const HeroSection = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
 
-        {/* Titre */}
-        <h2 className="text-2xl font-semibold text-center mb-2">
-          Créer un compte
+        <h2 className="text-2xl font-semibold text-gray-800 text-center mb-2">
+          Créez votre compte
         </h2>
-
-        {/* Sous-titre */}
         <p className="text-sm text-gray-500 text-center mb-4">
-          Inscription sécurisée – Hotellerie
+          Commencez votre expérience Luxe Haven dès aujourd’hui
         </p>
+
 
         {/* Message d’erreur */}
         {errorMsg && (
@@ -180,7 +178,7 @@ const HeroSection = () => {
                   value={formData[field]}
                   onChange={(e) => handleChange(field, e.target.value)}
                   className="w-full pl-10 py-2 border rounded-lg focus:ring-2"
-                  required
+                  required 
                 />
               </div>
             </div>
@@ -197,6 +195,7 @@ const HeroSection = () => {
                 onChange={(e) => handleChange("email", e.target.value)}
                 className="w-full pl-10 py-2 border rounded-lg"
                 required
+                placeholder="exemple@email.com"
               />
             </div>
           </div>
