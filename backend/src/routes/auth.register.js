@@ -11,14 +11,14 @@ router.post("/register", async (req, res) => {
     const { nom, postnom, prenom , email, password } = req.body;
 
     // VALIDATIONS
-    if (!nom || nom.length < 2)
+    if (!nameRegex.test(nom))
       return res.status(400).json({ message: "Nom invalide" });
 
-    if (!postnom || postnom.length < 2)
+    if (!nameRegex.test(postnom))
       return res.status(400).json({ message: "Postnom invalide" });
 
-    if (!prenom || prenom.length < 2)
-      return res.status(400).json({ message: "Prenom invalide" });
+    if (!nameRegex.test(prenom))
+      return res.status(400).json({ message: "Prénom invalide" });
 
     if (!email || !email.includes("@"))
       return res.status(400).json({ message: "Email invalide" });
