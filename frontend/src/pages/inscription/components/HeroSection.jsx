@@ -183,10 +183,10 @@ const HeroSection = () => {
                   required
                   placeholder={
                     field === "nom"
-                      ? "Ex : Muteba"
+                      ? "Entrez votre nom"
                       : field === "postnom"
-                      ? "Ex : Junior"
-                      : "Ex : Jean"
+                      ? "Entrez votre post-nom"
+                      : "Entrez votre prénom"
                   }
                 />
               </div>
