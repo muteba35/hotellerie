@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   try {
-    const { nom, postnom, email, password } = req.body;
+    const { nom, postnom, prenom , email, password } = req.body;
 
     // VALIDATIONS
     if (!nom || nom.length < 2)
