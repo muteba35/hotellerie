@@ -1,10 +1,31 @@
 import { MailCheck, RefreshCcw } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const COOLDOWN_SECONDS = 30;
 
 const HeroSection = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+
+  // ⏱️ TIMER
+  useEffect(() => {
+    if (cooldown <= 0) return;
+
+    const interval = setInterval(() => {
+      setCooldown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [cooldown]);
+
+  // 🔄 Quand le cooldown finit → bouton revient
+  useEffect(() => {
+    if (cooldown === 0) {
+      setSuccess(false);
+    }
+  }, [cooldown]);
 
   const handleResend = async () => {
     setLoading(true);
@@ -33,6 +54,7 @@ const HeroSection = () => {
 
       if (res.ok) {
         setSuccess(true);
+        setCooldown(COOLDOWN_SECONDS); // 🔥 démarre le timer
       } else {
         setError(data.message);
       }
@@ -56,12 +78,11 @@ const HeroSection = () => {
         </h2>
 
         <p className="text-gray-600 text-sm mb-4">
-          Un lien de confirmation a été envoyé à votre adresse email.  
-          Cliquez sur ce lien pour activer votre compte.
+          Un lien de confirmation a été envoyé à votre adresse email.
         </p>
 
         <p className="text-xs text-gray-500 mb-6">
-          Pensez à vérifier le dossier <b>Spam</b> si vous ne voyez rien.
+          Pensez à vérifier le dossier <b>Spam</b>.
         </p>
 
         {!success && (
@@ -77,7 +98,8 @@ const HeroSection = () => {
 
         {success && (
           <div className="mt-4 bg-green-50 border border-green-200 text-green-700 text-sm p-3 rounded-lg">
-            ✅ Un nouveau lien a été envoyé dans votre boîte mail.
+            ✅ Un nouveau lien a été envoyé.<br />
+            ⏱️ Vous pourrez renvoyer un lien dans {cooldown}s
           </div>
         )}
 
