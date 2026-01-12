@@ -53,6 +53,7 @@ router.post("/register", async (req, res) => {
     const newUser = new User({
       nom,
       postnom,
+      prenom,
       email,
       password: hashedPassword,
       isActive: false,
