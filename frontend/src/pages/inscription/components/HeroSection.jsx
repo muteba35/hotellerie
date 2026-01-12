@@ -26,6 +26,9 @@ const HeroSection = () => {
   // État pour stocker les messages d’erreur
   const [errorMsg, setErrorMsg] = useState("");
 
+  // État pour savoir si l'utilisateur a commencé à saisir le mot de passe
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
   // État qui contient toutes les données du formulaire
   const [formData, setFormData] = useState({
     nom: "",        // nom de l’utilisateur
@@ -154,7 +157,6 @@ const HeroSection = () => {
           Commencez votre expérience Luxe Haven dès aujourd’hui
         </p>
 
-
         {/* Message d’erreur */}
         {errorMsg && (
           <p className="text-red-500 text-sm text-center mb-4">
@@ -165,7 +167,7 @@ const HeroSection = () => {
         {/* Formulaire */}
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/* Champs nom, postnom, prénom générés automatiquement */}
+          {/* Champs nom, postnom, prénom */}
           {["nom", "postnom", "prenom"].map((field) => (
             <div key={field}>
               <label className="text-sm font-medium capitalize">
@@ -178,7 +180,14 @@ const HeroSection = () => {
                   value={formData[field]}
                   onChange={(e) => handleChange(field, e.target.value)}
                   className="w-full pl-10 py-2 border rounded-lg focus:ring-2"
-                  required 
+                  required
+                  placeholder={
+                    field === "nom"
+                      ? "Ex : Muteba"
+                      : field === "postnom"
+                      ? "Ex : Junior"
+                      : "Ex : Jean"
+                  }
                 />
               </div>
             </div>
@@ -208,7 +217,11 @@ const HeroSection = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
-                onChange={(e) => handleChange("password", e.target.value)}
+                onFocus={() => setPasswordTouched(true)}
+                onChange={(e) => {
+                  setPasswordTouched(true);
+                  handleChange("password", e.target.value);
+                }}
                 className="w-full pl-10 pr-10 py-2 border rounded-lg"
                 required
               />
@@ -222,14 +235,16 @@ const HeroSection = () => {
               </div>
             </div>
 
-            {/* Règles du mot de passe */}
-            <div className="mt-2 space-y-1">
-              <Rule ok={passwordRules.length} text="8 caractères minimum" />
-              <Rule ok={passwordRules.uppercase} text="Une majuscule" />
-              <Rule ok={passwordRules.lowercase} text="Une minuscule" />
-              <Rule ok={passwordRules.number} text="Un chiffre" />
-              <Rule ok={passwordRules.special} text="Un caractère spécial" />
-            </div>
+            {/* Règles du mot de passe (affichées uniquement après saisie) */}
+            {passwordTouched && (
+              <div className="mt-2 space-y-1">
+                <Rule ok={passwordRules.length} text="8 caractères minimum" />
+                <Rule ok={passwordRules.uppercase} text="Une majuscule" />
+                <Rule ok={passwordRules.lowercase} text="Une minuscule" />
+                <Rule ok={passwordRules.number} text="Un chiffre" />
+                <Rule ok={passwordRules.special} text="Un caractère spécial" />
+              </div>
+            )}
           </div>
 
           {/* Bouton submit */}
