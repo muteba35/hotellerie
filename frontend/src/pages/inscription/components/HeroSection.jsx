@@ -16,6 +16,9 @@ import axios from "axios";
 const HeroSection = () => {
   const navigate = useNavigate(); // pour redirection
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(""); // message d'erreur
+  const [loading, setLoading] = useState(false); // Indique si la requête est en cours (chargement)
+  const [passwordTouched, setPasswordTouched] = useState(false); // État pour savoir si l'utilisateur a commencé à saisir le mot de passe
   const [formData, setFormData] = useState({
     nom: "",
     postnom: "",
@@ -29,10 +32,7 @@ const HeroSection = () => {
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/;
 
 
-  const [errorMsg, setErrorMsg] = useState(""); // message d'erreur
-  const [loading, setLoading] = useState(false); // Indique si la requête est en cours (chargement)
-  
-  const [passwordTouched, setPasswordTouched] = useState(false); // État pour savoir si l'utilisateur a commencé à saisir le mot de passe
+ 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
@@ -72,6 +72,12 @@ const HeroSection = () => {
         "Nom, postnom et prénom doivent contenir uniquement des lettres et des chiffres (min. 2)."
       );
     }
+
+    // Vérifie si le mot de passe respecte toutes les règles
+    if (!isPasswordValid) {
+      return setErrorMsg("Mot de passe non conforme aux règles.");
+    }
+
     setLoading(true);// Active l'état de chargement
 
     try {
