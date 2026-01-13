@@ -31,10 +31,32 @@ const HeroSection = () => {
 
   const [errorMsg, setErrorMsg] = useState(""); // message d'erreur
   const [loading, setLoading] = useState(false); // Indique si la requête est en cours (chargement)
-
+  
+  const [passwordTouched, setPasswordTouched] = useState(false); // État pour savoir si l'utilisateur a commencé à saisir le mot de passe
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
+
+  // Objet qui contient les règles de validation du mot de passe
+  const passwordRules = {
+  // Vérifie si le mot de passe a au moins 8 caractères
+    length: formData.password.length >= 8,
+
+    // Vérifie la présence d’une majuscule
+    uppercase: /[A-Z]/.test(formData.password),
+
+    // Vérifie la présence d’une minuscule
+    lowercase: /[a-z]/.test(formData.password),
+
+    // Vérifie la présence d’un chiffre
+    number: /\d/.test(formData.password),
+
+    // Vérifie la présence d’un caractère spécial
+    special: /[\W_]/.test(formData.password),
+  };
+
+  // Vérifie si TOUTES les règles du mot de passe sont respectées
+  const isPasswordValid = Object.values(passwordRules).every(Boolean);
 
   const handleSubmit = async (e) => {
      // Empêche le rechargement de la page
@@ -76,6 +98,22 @@ const HeroSection = () => {
       }
     }
   };
+
+  // Composant pour afficher une règle (icône verte ou rouge)
+  const Rule = ({ ok, text }) => (
+    <div className="flex items-center gap-2 text-sm">
+      {ok ? (
+        // Icône verte si la règle est respectée
+        <CheckCircle size={16} className="text-green-500" />
+      ) : (
+        // Icône rouge si la règle n’est pas respectée
+        <XCircle size={16} className="text-red-400" />
+      )}
+      <span className={ok ? "text-green-600" : "text-gray-500"}>
+        {text}
+      </span>
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 px-4 py-10">
@@ -156,25 +194,43 @@ const HeroSection = () => {
 
           {/* Mot de passe */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+            <label className="text-sm font-medium">Mot de passe</label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-gray-400" size={18} />
               <input
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
-                onChange={(e) => handleChange("password", e.target.value)}
+                onFocus={() => setPasswordTouched(true)}
+                onChange={(e) => {
+                  setPasswordTouched(true);
+                  handleChange("password", e.target.value);
+                }}
+                className="w-full pl-10 pr-10 py-2 border rounded-lg"
                 required
-                placeholder=""
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
               />
+
+              {/* Icône afficher / masquer mot de passe */}
               <div
-                className="absolute right-3 top-3 text-gray-400 cursor-pointer"
+                className="absolute right-3 top-3 cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </div>
             </div>
+
+            {/* Règles du mot de passe (affichées uniquement après saisie) */}
+            {passwordTouched && (
+              <div className="mt-2 space-y-1">
+                <Rule ok={passwordRules.length} text="8 caractères minimum" />
+                <Rule ok={passwordRules.uppercase} text="Une majuscule" />
+                <Rule ok={passwordRules.lowercase} text="Une minuscule" />
+                <Rule ok={passwordRules.number} text="Un chiffre" />
+                <Rule ok={passwordRules.special} text="Un caractère spécial" />
+              </div>
+            )}
           </div>
+
+          
 
           {/* Bouton d'inscription */}
           <button
