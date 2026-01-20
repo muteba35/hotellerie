@@ -208,7 +208,7 @@ const HeroSection = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
-                onChange={(e) => {setPasswordTouched(true);handleChange("password", e.target.value)}}
+                onChange={(e) => handleChange("password", e.target.value)}
                 required
                 placeholder=""
                 className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
@@ -219,6 +219,7 @@ const HeroSection = () => {
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </div>
+
             </div>
 
              {/* Règles du mot de passe (affichées uniquement après saisie) */}
