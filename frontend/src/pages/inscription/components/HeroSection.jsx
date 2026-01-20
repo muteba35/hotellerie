@@ -15,7 +15,7 @@ import axios from "axios";
 // Stocke les données saisies dans le formulaire
 const HeroSection = () => {
   const navigate = useNavigate(); // pour redirection
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)//pour afficher la valeur du password
   const [errorMsg, setErrorMsg] = useState(""); // message d'erreur
   const [loading, setLoading] = useState(false); // Indique si la requête est en cours (chargement)
   const [passwordTouched, setPasswordTouched] = useState(false); // État pour savoir si l'utilisateur a commencé à saisir le mot de passe
@@ -31,11 +31,6 @@ const HeroSection = () => {
   // Minimum 2 caractères
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/;
 
-
- 
-  const handleChange = (field, value) => {
-    setFormData({ ...formData, [field]: value });
-  };
 
   // Objet qui contient les règles de validation du mot de passe
   const passwordRules = {
@@ -58,10 +53,16 @@ const HeroSection = () => {
   // Vérifie si TOUTES les règles du mot de passe sont respectées
   const isPasswordValid = Object.values(passwordRules).every(Boolean);
 
+   const handleChange = (field, value) => {  // Fonction appelée à chaque changement dans un champ
+    setFormData({ ...formData, [field]: value }); // Met à jour uniquement le champ modifié
+  };
+
   const handleSubmit = async (e) => {
-     // Empêche le rechargement de la page
-    e.preventDefault();
-    setErrorMsg(""); // reset message
+     
+    e.preventDefault();// Empêche le rechargement de la page
+
+    setErrorMsg("");  // Réinitialise le message d’erreur
+
     // Vérifie nom, postnom et prénom
     if (
       !nameRegex.test(formData.nom) ||
