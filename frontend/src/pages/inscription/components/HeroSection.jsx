@@ -219,14 +219,6 @@ const HeroSection = () => {
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </div>
-
-               {/* Icône afficher / masquer mot de passe */}
-              <div
-                className="absolute right-3 top-3 cursor-pointer"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </div>
             </div>
 
              {/* Règles du mot de passe (affichées uniquement après saisie) */}
@@ -239,7 +231,7 @@ const HeroSection = () => {
                 <Rule ok={passwordRules.special} text="Un caractère spécial" />
               </div>
             )}
-            
+
           </div>
 
           {/* Bouton d'inscription */}
