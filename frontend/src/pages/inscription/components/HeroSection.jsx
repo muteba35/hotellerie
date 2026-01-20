@@ -208,13 +208,10 @@ const HeroSection = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
-                onFocus={() => setPasswordTouched(true)}
-                onChange={(e) => {
-                  setPasswordTouched(true);
-                  handleChange("password", e.target.value);
-                }}
-                className="w-full pl-10 pr-10 py-2 border rounded-lg"
+                onChange={(e) => handleChange("password", e.target.value)}
                 required
+                placeholder=""
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
               />
               <div
                 className="absolute right-3 top-3 text-gray-400 cursor-pointer"
