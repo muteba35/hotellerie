@@ -6,32 +6,47 @@ const sendEmail = require("../user_mail/sendEmail");
 
 const router = express.Router();
 
+/* ================= VALIDATIONS ================= */
+
+// Regex pour autoriser uniquement les lettres (pas de chiffres, pas de symboles)
+// Minimum 2 caractères
+const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/;
+
 router.post("/register", async (req, res) => {
   try {
-    const { nom, postnom, prenom , email, password } = req.body;
+    const { nom, postnom, prenom, email, password } = req.body;
 
-    // VALIDATIONS
-    if (!nameRegex.test(nom))
+    /* ================= VALIDATIONS ================= */
+
+    if (!nameRegex.test(nom)) {
       return res.status(400).json({ message: "Nom invalide" });
+    }
 
-    if (!nameRegex.test(postnom))
+    if (!nameRegex.test(postnom)) {
       return res.status(400).json({ message: "Postnom invalide" });
+    }
 
-    if (!nameRegex.test(prenom))
+    if (!nameRegex.test(prenom)) {
       return res.status(400).json({ message: "Prénom invalide" });
+    }
 
-    if (!email || !email.includes("@"))
+    if (!email || !email.includes("@")) {
       return res.status(400).json({ message: "Email invalide" });
+    }
 
-    if (!password)
+    if (!password) {
       return res.status(400).json({ message: "Mot de passe requis" });
+    }
 
-    // EMAIL UNIQUE
+    /* ================= EMAIL UNIQUE ================= */
+
     const existingUser = await User.findOne({ email });
-    if (existingUser)
+    if (existingUser) {
       return res.status(400).json({ message: "Email déjà utilisé" });
+    }
 
-    // FORCE MOT DE PASSE 
+    /* ================= FORCE MOT DE PASSE ================= */
+
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
@@ -42,15 +57,18 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    // HASH
+    /* ================= HASH ================= */
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // TOKEN
-    const activationToken = crypto.randomBytes(32).toString("hex");
-    const activationTokenExpires = Date.now() + 60 * 60 * 1000;
+    /* ================= TOKEN ================= */
 
-    // CREATE USER
-    const newUser = new User({
+    const activationToken = crypto.randomBytes(32).toString("hex");
+    const activationTokenExpires = Date.now() + 60 * 60 * 1000; // 1h
+
+    /* ================= CREATE USER ================= */
+
+   const newUser = new User({
       nom,
       postnom,
       prenom,
