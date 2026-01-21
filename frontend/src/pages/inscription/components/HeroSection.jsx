@@ -1,5 +1,3 @@
-// React : pour créer le composant
-// useState : pour gérer les états (formulaire, chargement, erreurs)
 import React, { useState } from "react";
 
 // Link : navigation sans recharger la page
@@ -7,7 +5,15 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 // Icônes utilisées dans le formulaire
-import { Eye, EyeOff, Mail, User, Lock } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  User,
+  Lock,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 
 // axios : permet d'envoyer des requêtes HTTP (POST, GET, etc.)
 import axios from "axios";
@@ -15,10 +21,13 @@ import axios from "axios";
 // Stocke les données saisies dans le formulaire
 const HeroSection = () => {
   const navigate = useNavigate(); // pour redirection
-  const [showPassword, setShowPassword] = useState(false)//pour afficher la valeur du password
+  const [showPassword, setShowPassword] = useState(false); // pour afficher la valeur du password
   const [errorMsg, setErrorMsg] = useState(""); // message d'erreur
   const [loading, setLoading] = useState(false); // Indique si la requête est en cours (chargement)
-  const [passwordTouched, setPasswordTouched] = useState(false); // État pour savoir si l'utilisateur a commencé à saisir le mot de passe
+
+  // État pour savoir si l'utilisateur a commencé à saisir le mot de passe
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
   const [formData, setFormData] = useState({
     nom: "",
     postnom: "",
@@ -27,14 +36,13 @@ const HeroSection = () => {
     password: "",
   });
 
-  // Regex pour autoriser uniquement les lettres (pas de chiffres, pas de @@@)
+  // Regex pour autoriser uniquement les lettres
   // Minimum 2 caractères
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/;
 
-
   // Objet qui contient les règles de validation du mot de passe
   const passwordRules = {
-  // Vérifie si le mot de passe a au moins 8 caractères
+    // Vérifie si le mot de passe a au moins 8 caractères
     length: formData.password.length >= 8,
 
     // Vérifie la présence d’une majuscule
@@ -53,15 +61,20 @@ const HeroSection = () => {
   // Vérifie si TOUTES les règles du mot de passe sont respectées
   const isPasswordValid = Object.values(passwordRules).every(Boolean);
 
-   const handleChange = (field, value) => {  // Fonction appelée à chaque changement dans un champ
-    setFormData({ ...formData, [field]: value }); // Met à jour uniquement le champ modifié
+  // Fonction appelée à chaque changement dans un champ
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+
+    // 👉 Dès que l'utilisateur commence à saisir le mot de passe,
+    // on affiche les règles
+    if (field === "password") {
+      setPasswordTouched(true);
+    }
   };
 
   const handleSubmit = async (e) => {
-     
-    e.preventDefault();// Empêche le rechargement de la page
-
-    setErrorMsg("");  // Réinitialise le message d’erreur
+    e.preventDefault(); // Empêche le rechargement de la page
+    setErrorMsg(""); // Réinitialise le message d’erreur
 
     // Vérifie nom, postnom et prénom
     if (
@@ -70,7 +83,7 @@ const HeroSection = () => {
       !nameRegex.test(formData.prenom)
     ) {
       return setErrorMsg(
-        "Nom, postnom et prénom doivent contenir uniquement des lettres et des chiffres (min. 2)."
+        "Nom, postnom et prénom doivent contenir uniquement des lettres (min. 2)."
       );
     }
 
@@ -79,30 +92,31 @@ const HeroSection = () => {
       return setErrorMsg("Mot de passe non conforme aux règles.");
     }
 
-    setLoading(true);// Active l'état de chargement
+    setLoading(true); // Active l'état de chargement
 
     try {
-      const response = await axios.post("https://hotellerie.onrender.com/api/auth/register", 
-        formData,{
-        timeout: 15000, 
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        "https://hotellerie.onrender.com/api/auth/register",
+        formData,
+        {
+          timeout: 15000,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       alert(response.data.message); // succès
       localStorage.setItem("pendingEmail", formData.email);
-      setLoading(false);//Désactive le chargement en cas d'erreur
-      navigate("/Attente"); // redirection vers la page de connexion
+      navigate("/Attente"); // redirection
     } catch (error) {
-      // Désactive le chargement en cas d'erreur
-      setLoading(false);
       if (error.response && error.response.data) {
-        // Erreur venant du backend
         setErrorMsg(error.response.data.message);
       } else {
-           // Erreur réseau ou serveur indisponible
         setErrorMsg("Erreur serveur. Veuillez réessayer plus tard.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,10 +124,8 @@ const HeroSection = () => {
   const Rule = ({ ok, text }) => (
     <div className="flex items-center gap-2 text-sm">
       {ok ? (
-        // Icône verte si la règle est respectée
         <CheckCircle size={16} className="text-green-500" />
       ) : (
-        // Icône rouge si la règle n’est pas respectée
         <XCircle size={16} className="text-red-400" />
       )}
       <span className={ok ? "text-green-600" : "text-gray-500"}>
@@ -125,16 +137,23 @@ const HeroSection = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 px-4 py-10">
       <div className="w-full max-w-md bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl p-8 border border-gray-200">
+
         <h2 className="text-2xl font-semibold text-gray-800 text-center mb-2">
           Créez votre compte
         </h2>
+
         <p className="text-sm text-gray-500 text-center mb-4">
           Commencez votre expérience Luxe Haven dès aujourd’hui
         </p>
 
-        {errorMsg && <p className="text-red-500 text-sm text-center mb-4">{errorMsg}</p>}
+        {errorMsg && (
+          <p className="text-red-500 text-sm text-center mb-4">
+            {errorMsg}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
+
           {/* Nom */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Nom</label>
@@ -146,7 +165,7 @@ const HeroSection = () => {
                 onChange={(e) => handleChange("nom", e.target.value)}
                 required
                 placeholder="Entrez votre nom"
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
               />
             </div>
           </div>
@@ -162,7 +181,7 @@ const HeroSection = () => {
                 onChange={(e) => handleChange("postnom", e.target.value)}
                 required
                 placeholder="Entrez votre post-nom"
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
               />
             </div>
           </div>
@@ -178,7 +197,7 @@ const HeroSection = () => {
                 onChange={(e) => handleChange("prenom", e.target.value)}
                 required
                 placeholder="Entrez votre prenom"
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
               />
             </div>
           </div>
@@ -194,12 +213,11 @@ const HeroSection = () => {
                 onChange={(e) => handleChange("email", e.target.value)}
                 required
                 placeholder="exemple@email.com"
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg"
               />
             </div>
           </div>
 
-         
           {/* Mot de passe */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
@@ -209,9 +227,9 @@ const HeroSection = () => {
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={(e) => handleChange("password", e.target.value)}
+                onFocus={() => setPasswordTouched(true)} // 👉 affichage des règles au clic
                 required
-                placeholder=""
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent outline-none transition"
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg"
               />
               <div
                 className="absolute right-3 top-3 text-gray-400 cursor-pointer"
@@ -219,10 +237,9 @@ const HeroSection = () => {
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </div>
-
             </div>
 
-             {/* Règles du mot de passe (affichées uniquement après saisie) */}
+            {/* Règles du mot de passe (affichées uniquement après interaction) */}
             {passwordTouched && (
               <div className="mt-2 space-y-1">
                 <Rule ok={passwordRules.length} text="8 caractères minimum" />
@@ -232,14 +249,13 @@ const HeroSection = () => {
                 <Rule ok={passwordRules.special} text="Un caractère spécial" />
               </div>
             )}
-
           </div>
 
           {/* Bouton d'inscription */}
           <button
             type="submit"
             disabled={loading}
-            className={`w-full bg-secondary hover:bg-secondary/90 text-white py-2 rounded-lg shadow-md transition font-medium ${
+            className={`w-full bg-secondary text-white py-2 rounded-lg ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -249,18 +265,11 @@ const HeroSection = () => {
 
         {/* Liens */}
         <div className="mt-6 text-center">
-          <Link to="/connexion" className="text-sm text-secondary hover:underline font-medium">
+          <Link to="/connexion" className="text-sm text-secondary hover:underline">
             Déjà un compte ? Connectez-vous
           </Link>
-          <div className="mt-2">
-            <Link
-              to="/forgot-password"
-              className="text-xs text-gray-500 hover:text-secondary transition"
-            >
-              Mot de passe oublié ?
-            </Link>
-          </div>
         </div>
+
       </div>
     </div>
   );
