@@ -12,6 +12,9 @@ const router = express.Router();
 // Minimum 2 caractères
 const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/;
 
+//eviter le doublon mail
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 router.post("/register", async (req, res) => {
   try {
    
@@ -36,8 +39,8 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Prénom invalide" });
     }
 
-    if (!email || !email.includes("@")) {
-      return res.status(400).json({ message: "Email invalide" });
+    if (!email || !emailRegex.test(email)) {
+        return res.status(400).json({ message: "Email invalide" });
     }
 
     if (!password) {

@@ -33,10 +33,10 @@ router.post("/resend-verification", async (req, res) => {
 
     await user.save();
 
-    // 3️⃣ Lien
+    //Lien
     const activationLink = `${process.env.BACKEND_URL}/api/auth/verify-email/${activationToken}`;
 
-    // 4️⃣ Email (DESIGN IDENTIQUE)
+    // Email (DESIGN IDENTIQUE)
     await sendEmail({
       to: email,
       subject: `Nouveau lien de confirmation — ${new Date().toLocaleString()}`,
