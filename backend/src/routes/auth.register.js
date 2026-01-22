@@ -10,18 +10,17 @@ const router = express.Router();
 
 // Regex pour autoriser uniquement les lettres (pas de chiffres, pas de symboles)
 // Minimum 2 caractères
-// Regex email standard
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/;
 
 router.post("/register", async (req, res) => {
   try {
+   
+   //nettoyage et eviter le doublon
     const nom = req.body.nom?.trim();
     const postnom = req.body.postnom?.trim();
     const prenom = req.body.prenom?.trim();
     const email = req.body.email?.trim().toLowerCase();
     const password = req.body.password;
-
 
     /* ================= VALIDATIONS ================= */
 
@@ -37,10 +36,9 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Prénom invalide" });
     }
 
-      if (!email || !emailRegex.test(email)) {
-        return res.status(400).json({ message: "Email invalide" });
-      }
-
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({ message: "Email invalide" });
+    }
 
     if (!password) {
       return res.status(400).json({ message: "Mot de passe requis" });
