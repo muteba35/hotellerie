@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const User = require("../models/User");
 const sendEmail = require("../user_mail/sendEmail");
+const rateLimit = require("express-rate-limit");
 
 const router = express.Router();
 
@@ -15,7 +16,21 @@ const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/;
 //eviter le doublon mail
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-router.post("/register", async (req, res) => {
+// Max 5 tentatives d’inscription par IP toutes les 15 minutes
+const registerLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 requêtes max
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    message:
+      "Trop de tentatives d’inscription. Veuillez réessayer dans 15 minutes.",
+  },
+});
+
+
+
+router.post("/register", registerLimiter, async (req, res) => {
   try {
    
    //nettoyage et eviter le doublon
