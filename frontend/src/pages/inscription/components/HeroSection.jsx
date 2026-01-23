@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Link : navigation sans recharger la page
 // useNavigate : redirection programmée après inscription
@@ -27,6 +27,10 @@ const HeroSection = () => {
 
   // État pour savoir si l'utilisateur a commencé à saisir le mot de passe
   const [passwordTouched, setPasswordTouched] = useState(false);
+
+  // ===== AJOUT : blocage après trop de tentatives =====
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [retryAfter, setRetryAfter] = useState(null);
 
   const [formData, setFormData] = useState({
     nom: "",
@@ -72,9 +76,38 @@ const HeroSection = () => {
     }
   };
 
+  // ===== AJOUT : compte à rebours 15 minutes =====
+  useEffect(() => {
+    if (!retryAfter) return;
+
+    const interval = setInterval(() => {
+      if (Date.now() >= retryAfter) {
+        setIsBlocked(false);
+        setRetryAfter(null);
+        clearInterval(interval);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [retryAfter]);
+
+  // ===== AJOUT : format temps restant =====
+  const formatRemainingTime = () => {
+    if (!retryAfter) return "";
+    const diff = retryAfter - Date.now();
+    const minutes = Math.floor(diff / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Empêche le rechargement de la page
     setErrorMsg(""); // Réinitialise le message d’erreur
+
+    // ===== AJOUT : empêche soumission si bloqué =====
+    if (isBlocked) {
+      return;
+    }
 
     // Vérifie nom, postnom et prénom
     if (
@@ -110,7 +143,12 @@ const HeroSection = () => {
       localStorage.setItem("pendingEmail", formData.email);
       navigate("/Attente"); // redirection
     } catch (error) {
-      if (error.response && error.response.data) {
+      // ===== AJOUT : gestion du 429 (trop de tentatives) =====
+      if (error.response && error.response.status === 429) {
+        setIsBlocked(true);
+        setRetryAfter(Date.now() + 15 * 60 * 1000); // 15 minutes
+        setErrorMsg(error.response.data.message);
+      } else if (error.response && error.response.data) {
         setErrorMsg(error.response.data.message);
       } else {
         setErrorMsg("Erreur serveur. Veuillez réessayer plus tard.");
@@ -149,6 +187,13 @@ const HeroSection = () => {
         {errorMsg && (
           <p className="text-red-500 text-sm text-center mb-4">
             {errorMsg}
+          </p>
+        )}
+
+        {/* ===== AJOUT : message blocage ===== */}
+        {isBlocked && (
+          <p className="text-red-600 text-sm text-center mb-4">
+            Trop de tentatives. Réessayez dans {formatRemainingTime()}
           </p>
         )}
 
@@ -254,9 +299,9 @@ const HeroSection = () => {
           {/* Bouton d'inscription */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || isBlocked}
             className={`w-full bg-secondary text-white py-2 rounded-lg ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
+              loading || isBlocked ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
             {loading ? "Inscription en cours..." : "S’inscrire"}
