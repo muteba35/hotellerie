@@ -1,10 +1,12 @@
+
+// Import des hooks React nécessaires
 import React, { useState, useEffect } from "react";
 
-// Link : navigation sans recharger la page
-// useNavigate : redirection programmée après inscription
+// Link : navigation sans rechargement
+// useNavigate : redirection après succès
 import { Link, useNavigate } from "react-router-dom";
 
-// Icônes utilisées dans le formulaire
+// Icônes pour l’UI
 import {
   Eye,
   EyeOff,
@@ -15,24 +17,29 @@ import {
   XCircle,
 } from "lucide-react";
 
-// axios : permet d'envoyer des requêtes HTTP (POST, GET, etc.)
+// Axios : requêtes HTTP vers l’API
 import axios from "axios";
 
-// Stocke les données saisies dans le formulaire
+// Durée du blocage après trop de tentatives (15 minutes)
+const BLOCK_DURATION = 15 * 60; // en secondes
+
+// Clé utilisée pour stocker le blocage dans le navigateur
+const STORAGE_KEY = "register_block_until";
+
 const HeroSection = () => {
-  const navigate = useNavigate(); // pour redirection
-  const [showPassword, setShowPassword] = useState(false); // pour afficher la valeur du password
-  const [errorMsg, setErrorMsg] = useState(""); // message d'erreur
-  const [loading, setLoading] = useState(false); // Indique si la requête est en cours (chargement)
+  const navigate = useNavigate(); // redirection programmée
 
-  // État pour savoir si l'utilisateur a commencé à saisir le mot de passe
-  const [passwordTouched, setPasswordTouched] = useState(false);
+  // ===== États UI =====
+  const [showPassword, setShowPassword] = useState(false); // afficher / cacher le mot de passe
+  const [errorMsg, setErrorMsg] = useState(""); // message d’erreur
+  const [loading, setLoading] = useState(false); // état de chargement
+  const [passwordTouched, setPasswordTouched] = useState(false); // affichage des règles
 
-  // ===== AJOUT : blocage après trop de tentatives =====
-  const [isBlocked, setIsBlocked] = useState(false);
-  const [retryAfter, setRetryAfter] = useState(null);
-  
+  // ===== Sécurité : blocage après trop de tentatives =====
+  const [isBlocked, setIsBlocked] = useState(false); // formulaire bloqué ou non
+  const [remainingTime, setRemainingTime] = useState(0); // temps restant en secondes
 
+  // ===== Données du formulaire =====
   const [formData, setFormData] = useState({
     nom: "",
     postnom: "",
@@ -41,76 +48,86 @@ const HeroSection = () => {
     password: "",
   });
 
-  // Regex pour autoriser uniquement les lettres
-  // Minimum 2 caractères
+  // Regex : autorise uniquement lettres + espaces + tirets (min 2 caractères)
   const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s-]{2,}$/;
 
-  // Objet qui contient les règles de validation du mot de passe
+  // ===== Règles de validation du mot de passe =====
   const passwordRules = {
-    // Vérifie si le mot de passe a au moins 8 caractères
-    length: formData.password.length >= 8,
-
-    // Vérifie la présence d’une majuscule
-    uppercase: /[A-Z]/.test(formData.password),
-
-    // Vérifie la présence d’une minuscule
-    lowercase: /[a-z]/.test(formData.password),
-
-    // Vérifie la présence d’un chiffre
-    number: /\d/.test(formData.password),
-
-    // Vérifie la présence d’un caractère spécial
-    special: /[\W_]/.test(formData.password),
+    length: formData.password.length >= 8,       // minimum 8 caractères
+    uppercase: /[A-Z]/.test(formData.password), // une majuscule
+    lowercase: /[a-z]/.test(formData.password), // une minuscule
+    number: /\d/.test(formData.password),        // un chiffre
+    special: /[\W_]/.test(formData.password),   // un caractère spécial
   };
 
-  // Vérifie si TOUTES les règles du mot de passe sont respectées
+  // Vérifie si toutes les règles sont respectées
   const isPasswordValid = Object.values(passwordRules).every(Boolean);
 
-  // Fonction appelée à chaque changement dans un champ
+  // ===== Gestion des changements dans le formulaire =====
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
 
-    // 👉 Dès que l'utilisateur commence à saisir le mot de passe,
-    // on affiche les règles
-    if (field === "password") {
-      setPasswordTouched(true);
-    }
+    // Dès que l’utilisateur touche au mot de passe,
+    // on affiche les règles de sécurité
+    if (field === "password") setPasswordTouched(true);
   };
 
-  // ===== AJOUT : compte à rebours 15 minutes =====
+  // ===== AU CHARGEMENT DE LA PAGE =====
+  // Vérifie si un blocage existe déjà (même sur un autre téléphone)
   useEffect(() => {
-    if (!retryAfter) return;
+    const blockedUntil = localStorage.getItem(STORAGE_KEY);
+
+    if (blockedUntil) {
+      const diff = Math.floor((blockedUntil - Date.now()) / 1000);
+
+      if (diff > 0) {
+        // Blocage toujours actif
+        setIsBlocked(true);
+        setRemainingTime(diff);
+      } else {
+        // Blocage expiré
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  }, []);
+
+  // ===== TIMER : décrémente chaque seconde =====
+  useEffect(() => {
+    if (!isBlocked || remainingTime <= 0) return;
 
     const interval = setInterval(() => {
-      if (Date.now() >= retryAfter) {
-        setIsBlocked(false);
-        setRetryAfter(null);
-        clearInterval(interval);
-      }
+      setRemainingTime((prev) => {
+        if (prev <= 1) {
+          // Temps écoulé → déblocage automatique
+          clearInterval(interval);
+          setIsBlocked(false);
+          localStorage.removeItem(STORAGE_KEY);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
 
+    // Nettoyage du timer
     return () => clearInterval(interval);
-  }, [retryAfter]);
+  }, [isBlocked, remainingTime]);
 
-  // ===== AJOUT : format temps restant =====
+  // ===== Formatage du temps restant (mm:ss) =====
   const formatRemainingTime = () => {
-    if (!retryAfter) return "";
-    const diff = retryAfter - Date.now();
-    const minutes = Math.floor(diff / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
+    const minutes = Math.floor(remainingTime / 60);
+    const seconds = remainingTime % 60;
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
+  // ===== Soumission du formulaire =====
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Empêche le rechargement de la page
-    setErrorMsg(""); // Réinitialise le message d’erreur
+    e.preventDefault();
+    setErrorMsg("");
 
-    // ===== AJOUT : empêche soumission si bloqué =====
-    if (isBlocked) {
-      return;
-    }
+    // Empêche toute action si le compte est bloqué
+    if (isBlocked) return;
 
-    // Vérifie nom, postnom et prénom
+    // Validation des noms
     if (
       !nameRegex.test(formData.nom) ||
       !nameRegex.test(formData.postnom) ||
@@ -121,35 +138,34 @@ const HeroSection = () => {
       );
     }
 
-    // Vérifie si le mot de passe respecte toutes les règles
+    // Validation du mot de passe
     if (!isPasswordValid) {
       return setErrorMsg("Mot de passe non conforme aux règles.");
     }
 
-    setLoading(true); // Active l'état de chargement
+    setLoading(true);
 
     try {
+      // Envoi des données vers l’API
       const response = await axios.post(
         "https://hotellerie.onrender.com/api/auth/register",
         formData,
-        {
-          timeout: 15000,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      alert(response.data.message); // succès
+      // Succès
+      alert(response.data.message);
       localStorage.setItem("pendingEmail", formData.email);
-      navigate("/Attente"); // redirection
+      navigate("/Attente");
+
     } catch (error) {
-      // ===== AJOUT : gestion du 429 (trop de tentatives) =====
-      if (error.response && error.response.status === 429) {
+      // Trop de tentatives → blocage 15 minutes
+      if (error.response?.status === 429) {
+        const blockUntil = Date.now() + BLOCK_DURATION * 1000;
+        localStorage.setItem(STORAGE_KEY, blockUntil);
+
         setIsBlocked(true);
-        setRetryAfter(Date.now() + 15 * 60 * 1000); // 15 minutes
-        setErrorMsg(error.response.data.message);
-      } else if (error.response && error.response.data) {
+        setRemainingTime(BLOCK_DURATION);
         setErrorMsg(error.response.data.message);
       } else {
         setErrorMsg("Erreur serveur. Veuillez réessayer plus tard.");
@@ -158,7 +174,7 @@ const HeroSection = () => {
       setLoading(false);
     }
   };
-
+  
   // Composant pour afficher une règle (icône verte ou rouge)
   const Rule = ({ ok, text }) => (
     <div className="flex items-center gap-2 text-sm">
