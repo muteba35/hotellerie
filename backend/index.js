@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 const registerRoute = require("./src/routes/auth.register");
 const verifyEmailRoute = require("./src/routes/auth.verify");
 const resendEmailRoute= require("./src/routes/auth.resend");
-const loginRoute= require("./src/routes/auth.login");
+const LoginRoute= require("./src/routes/auth.login");
 
 const PORT = process.env.PORT || 5000;
 
@@ -40,9 +40,9 @@ mongoose
 
     // ROUTES APRÈS CONNEXION
     app.use("/api/auth", registerRoute);
-    app.use("/api/auth", loginRoute);
     app.use("/api/auth", verifyEmailRoute);
     app.use("/api/auth", resendEmailRoute);
+    app.use("/api/auth", LoginRoute);
 
     app.listen(PORT, () => {
       console.log("Serveur lancé sur http://localhost:" + PORT);
