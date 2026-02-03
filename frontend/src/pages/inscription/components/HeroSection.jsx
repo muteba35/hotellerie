@@ -31,7 +31,7 @@ const HeroSection = () => {
   // ===== AJOUT : blocage après trop de tentatives =====
   const [isBlocked, setIsBlocked] = useState(false);
   const [retryAfter, setRetryAfter] = useState(null);
-  const [tick, setTick] = useState(0); // etat pour le compteur
+  
 
   const [formData, setFormData] = useState({
     nom: "",
@@ -91,22 +91,6 @@ const HeroSection = () => {
 
     return () => clearInterval(interval);
   }, [retryAfter]);
-
-  useEffect(() => {
-  if (!retryAfter) return;
-
-  const interval = setInterval(() => {
-    setTick((t) => t + 1); 
-
-    if (Date.now() >= retryAfter) {
-      setIsBlocked(false);
-      setRetryAfter(null);
-      clearInterval(interval);
-    }
-  }, 1000);
-
-  return () => clearInterval(interval);
-}, [retryAfter]);
 
   // ===== AJOUT : format temps restant =====
   const formatRemainingTime = () => {
