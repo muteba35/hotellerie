@@ -5,6 +5,9 @@ require("dotenv").config();
 
 const app = express();
 
+// pour express-rate-limit derrière un proxy(Render)
+app.set("trust proxy", 1);
+
 // middlewares
 app.use(cors());
 app.use(express.json());
