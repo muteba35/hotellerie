@@ -19,15 +19,22 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Max 5 tentatives d’inscription par IP toutes les 15 minutes
 const registerLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 requêtes max
+  max: 5, // 5 tentatives
   standardHeaders: true,
   legacyHeaders: false,
+
+  keyGenerator: (req) => {
+    return (
+      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
+      req.socket.remoteAddress
+    );
+  },
+
   message: {
     message:
       "Trop de tentatives d’inscription. Veuillez réessayer dans 15 minutes.",
   },
 });
-
 
 
 router.post("/register", registerLimiter, async (req, res) => {
