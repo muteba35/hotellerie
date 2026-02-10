@@ -48,7 +48,7 @@ const HeroSection = () => {
       );
 
       // Redirection
-      navigate("/homemage");
+      navigate("/homepage");
 
     } catch (error) {
       // Erreurs contrôlées venant du backend
