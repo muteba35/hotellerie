@@ -13,11 +13,48 @@ const HeroSection = () => {
     setFormData({ ...formData, [field]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Formulaire soumis :", formData);
-    // ici, on enverra les données vers le backend plus tard
-  };
+  const handleSubmit = async (e) => {
+  // Empêche le rechargement automatique du formulaire
+  e.preventDefault();
+
+  try {
+    // Envoi d'une requête HTTP vers le backend
+    const response = await fetch(
+      "http://localhost:5000/api/auth/login",
+      {
+        // Méthode HTTP : POST (on envoie des données)
+        method: "POST",
+
+        // En-têtes HTTP
+        headers: {
+          // On précise que les données envoyées sont en JSON
+          "Content-Type": "application/json",
+        },
+
+        // Corps de la requête
+        // On convertit l'objet JS formData en JSON
+        body: JSON.stringify(formData),
+      }
+    );
+
+    // On récupère la réponse du serveur en JSON
+    const data = await response.json();
+
+    // Si la connexion a échoué
+    if (!data.success) {
+      alert(data.message);
+      return;
+    }
+
+    // Si la connexion a réussi
+    console.log("Utilisateur connecté :", data.user);
+     navigate("/homepage");
+
+  } catch (error) {
+    // Si une erreur réseau ou serveur se produit
+    console.error("Erreur connexion :", error);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 px-4 py-10">
