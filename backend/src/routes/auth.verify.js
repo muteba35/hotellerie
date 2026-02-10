@@ -14,7 +14,7 @@ router.get("/verify-email/:token", async (req, res) => {
     const user = await User.findOne({ activationToken: token });
       console.log("👤 USER TROUVÉ :", user);
 
-    if (!user) {
+    if (!user) {  
        return res.redirect(
         `${process.env.FRONTEND_URL}/verification_email?status=invalid`
       );
