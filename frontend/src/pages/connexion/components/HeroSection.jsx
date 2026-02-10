@@ -20,7 +20,7 @@ const HeroSection = () => {
   try {
     // Envoi d'une requête HTTP vers le backend
     const response = await fetch(
-      "http://localhost:5000/api/auth/login",
+       "https://hotellerie.onrender.com/api/auth/login",
       {
         // Méthode HTTP : POST (on envoie des données)
         method: "POST",
