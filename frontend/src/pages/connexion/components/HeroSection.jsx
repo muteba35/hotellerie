@@ -1,24 +1,66 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Eye, EyeOff, Mail, User, Lock } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import axios from "axios";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  // Mise à jour des champs
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
 
-  const handleSubmit = (e) => {
+  // Soumission du formulaire
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Formulaire soumis :", formData);
-    // ici, on enverra les données vers le backend plus tard
-  };
+    setLoading(true);
+    setErrorMsg("");
 
+    try {
+         // Envoi des données vers l’API
+      const response = await axios.post(
+        "https://hotellerie.onrender.com/api/auth/login",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Succès
+      console.log("Utilisateur connecté :", response.data.user);
+
+      // Exemple : stockage temporaire (plus tard → JWT)
+      localStorage.setItem(
+        "user",
+        JSON.stringify(response.data.user)
+      );
+
+      // Redirection
+      navigate("/homemage");
+
+    } catch (error) {
+      // Erreurs contrôlées venant du backend
+      if (error.response) {
+        setErrorMsg(error.response.data.message);
+      } else {
+        setErrorMsg("Erreur serveur. Réessayez plus tard.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-secondary/10 px-4 py-10">
       <div className="w-full max-w-md bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl p-8 border border-gray-200">
@@ -29,7 +71,13 @@ const HeroSection = () => {
           Profitez de votre expérience Luxe Haven dès aujourd’hui
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        {errorMsg && (
+          <p className="text-red-500 text-sm text-center">
+            {errorMsg}
+          </p>
+        )}
+
+      <form onSubmit={handleSubmit} className="space-y-5">
 
           {/* Email */}
           <div>
@@ -75,10 +123,10 @@ const HeroSection = () => {
 
           {/* Bouton d'inscription */}
           <button
-            type="submit"
+            type="submit" disabled={loading}
             className="w-full bg-secondary hover:bg-secondary/90 text-white py-2 rounded-lg shadow-md transition font-medium"
           >
-            S’inscrire
+             {loading ? "Connexion..." : "Se connecter"}
           </button>
         </form>
 
