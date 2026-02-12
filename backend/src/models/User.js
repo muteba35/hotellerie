@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema(
       default:0,
     },
     lockUntil:{
-      type:date,
+      type:Date,
     },
     isBlocked:{
       type:Boolean,
