@@ -52,6 +52,18 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    //Compteur d'echecs
+    loginAttempts:{
+      type:Number,
+      default:0,
+    },
+    lockUntil:{
+      type:date,
+    },
+    IsBlocked:{
+      type:Boolean,
+      default:false,
+    }
   },
   { timestamps: true } // createdAt / updatedAt
 );
