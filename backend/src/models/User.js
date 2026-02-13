@@ -57,9 +57,11 @@ const userSchema = new mongoose.Schema(
       type:Number,
       default:0,
     },
+    //Date de fin blocage temporaire
     lockUntil:{
       type:Date,
     },
+    // Blocage definitif
     isBlocked:{
       type:Boolean,
       default:false,

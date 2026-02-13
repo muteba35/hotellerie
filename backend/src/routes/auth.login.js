@@ -11,6 +11,14 @@ const bcrypt = require("bcrypt");
 // Import du modèle User (schéma MongoDB)
 const User = require("../models/User");
 
+// Import des fonctions d'emails de sécurité
+const {
+  sendWarningEmail,
+  sendTemporaryBlockEmail,
+  sendPermanentBlockEmail,
+} = require("../user_mail_danger/securityEmails");
+
+
 // Création d’un routeur Express
 // Le routeur permet de séparer les routes par fichier
 const router = express.Router();
@@ -122,6 +130,8 @@ router.post("/login", async (req, res) => {
       // Avertissement à 3 tentatives
       if (user.loginAttempts === 3) {
         await user.save();
+          // Envoi email d’alerte
+          await sendWarningEmail(user.email, user.nom);
 
         return res.status(401).json({
           success: false,
@@ -138,6 +148,8 @@ router.post("/login", async (req, res) => {
         user.lockUntil = Date.now() + 15 * 60 * 1000;
 
         await user.save();
+        // Envoi email blocage temporaire
+        await sendTemporaryBlockEmail(user.email, user.nom);
 
         return res.status(403).json({
           success: false,
@@ -154,6 +166,8 @@ router.post("/login", async (req, res) => {
         user.isBlocked = true;
 
         await user.save();
+          // Envoi email blocage définitif
+          await sendPermanentBlockEmail(user.email, user.nom);
 
         return res.status(403).json({
           success: false,
