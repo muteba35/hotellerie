@@ -12,11 +12,9 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User");
 
 // Import des fonctions d'emails de sécurité
-const {
-  sendWarningEmail,
-  sendTemporaryBlockEmail,
-  sendPermanentBlockEmail,
-} = require("../user_mail_danger/securityEmails");
+const sendWarningEmail= require("../user_mail_danger/securityEmails");
+const sendTemporaryBlockEmail= require("../user_mail_danger/securityEmails");
+const sendPermanentBlockEmail= require("../user_mail_danger/securityEmails");
 
 
 // Création d’un routeur Express
